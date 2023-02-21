@@ -1,0 +1,12 @@
+:root {
+    /* set root styles like font, page background, etc */
+}
+
+*,
+*:is(::before, ::after) {
+    box-sizing: border-box;
+}
+
+#boards {
+    background-color: green;
+}
