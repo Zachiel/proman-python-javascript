@@ -1,11 +1,21 @@
+import os
+import sys
+from typing import Union, Any
+import uuid
+import re
 import mimetypes
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request, redirect, Response
+from flask import session, abort
 from dotenv import load_dotenv
 from util import json_response
 import queries
 
+UPLOAD_FOLDER: str = 'static\\uploads'
+
 mimetypes.add_type('application/javascript', '.js')
-app = Flask(__name__)
+app: Flask = Flask(__name__, static_url_path='/static')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
 load_dotenv()
 
 @app.route("/")
