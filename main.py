@@ -1,7 +1,7 @@
+import mimetypes
 from flask import Flask, render_template, url_for
 from dotenv import load_dotenv
 from util import json_response
-import mimetypes
 import queries
 
 mimetypes.add_type('application/javascript', '.js')
@@ -36,11 +36,12 @@ def get_cards_for_board(board_id: int):
 
 
 def main():
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
     # Serving the favicon
     with app.app_context():
-        app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon/favicon.ico'))
+        app.add_url_rule('/favicon.ico', redirect_to=url_for(
+            'static', filename='favicon/favicon.ico'))
 
 
 if __name__ == '__main__':
