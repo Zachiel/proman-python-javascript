@@ -1,3 +1,5 @@
+"Python server file containing routes and responses."
+# pylint: disable=unused-import
 import os
 import sys
 from typing import Union, Any
@@ -19,33 +21,31 @@ app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
 load_dotenv()
 
 @app.route("/")
-def index():
-    """
-    This is a one-pager which shows all the boards and cards
-    """
+def index() -> str:
+    "This is a one-pager which shows all the boards and cards"
+
     return render_template('pages/index.html')
 
 
 @app.route("/api/boards")
 @json_response
-def get_boards():
-    """
-    All the boards
-    """
+def get_boards() -> Any:
+    "All the boards"
+
     return queries.get_boards()
 
 
 @app.route("/api/boards/<int:board_id>/cards/")
 @json_response
-def get_cards_for_board(board_id: int):
-    """
-    All cards that belongs to a board
+def get_cards_for_board(board_id: int) -> Any:
+    """All cards that belongs to a board
     :param board_id: id of the parent board
-    """
-    return queries.get_cards_for_board(board_id)
+    return queries.get_cards_for_board(board_id)"""
+    return board_id
 
 
-def main():
+def main() -> None:
+    "Start server."
     app.run(debug=True, host='0.0.0.0', port=5000)
 
     # Serving the favicon

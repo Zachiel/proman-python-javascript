@@ -1,10 +1,15 @@
+"Database utility functions."
+# pylint: disable=no-name-in-module, unused-import
+# pyright: reportOptionalContextManager=false, reportOptionalSubscript=false
 import os
-from typing import Union, Callable, Any
+from typing import Callable, Any
+from psycopg2 import connection
+from psycopg2.extras import RealDictCursor, RealDictRow
 import psycopg2
-import psycopg2.extras
 
 
-def establish_connection(connection_data=None):
+def establish_connection(connection_data: dict[str, Any] | None=None) \
+    -> connection | None:
     """
     Create a database connection based on the :connection_data: parameter
     :connection_data: Connection string attributes
@@ -13,12 +18,10 @@ def establish_connection(connection_data=None):
     if connection_data is None:
         connection_data = get_connection_data()
     try:
-        connect_str = "dbname={} user={} host={} password={}"\
-            .format(connection_data['dbname'],
-                    connection_data['user'],
-                    connection_data['host'],
-                    connection_data['password'])
-        conn = psycopg2.connect(connect_str)
+        connect_str: str = f"dbname={connection_data['dbname']}\
+            user={connection_data['user']} host={connection_data['host']}\
+            password={connection_data['password']}"
+        conn: connection = psycopg2.connect(connect_str)
         conn.autocommit = True
     except psycopg2.DatabaseError as error:
         print("Cannot connect to database.")
@@ -27,7 +30,7 @@ def establish_connection(connection_data=None):
         return conn
 
 
-def get_connection_data(db_name=None):
+def get_connection_data(db_name: str | None=None) -> dict[str, Any] | None:
     """
     Give back a properly formatted dictionary based on the
     environment variables values which are started with :MY__PSQL_: prefix
@@ -45,7 +48,8 @@ def get_connection_data(db_name=None):
     }
 
 
-def execute_select(statement, variables=None, fetchall=True):
+def execute_select(statement, variables=None, fetchall=True)\
+    -> list[RealDictRow] | RealDictRow | None:
     """
     Execute SELECT statement optionally parameterized.
     Use fetchall=False to get back one value (fetchone)
@@ -57,8 +61,8 @@ def execute_select(statement, variables=None, fetchall=True):
     variables:  optional parameter dict, optional parameter fetchall"""
     result_set = []
     with establish_connection() as conn:
-        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute(statement, variables)
-            result_set = cursor.fetchall() if fetchall else cursor.fetchone()
+            result_set: list[RealDictRow] | RealDictRow | None\
+                = cursor.fetchall() if fetchall else cursor.fetchone()
     return result_set
-

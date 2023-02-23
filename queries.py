@@ -1,48 +1,41 @@
-import sys
+"PostgreSQL queries module."
+# pylint: disable=unused-import
 from typing import Any
-from datetime import datetime, timedelta
 import bcrypt
 import data_manager
 
 
-def get_card_status(status_id):
-    """
-    Find the first status matching the given id
-    :param status_id:
-    :return: str
-    """
-    status = data_manager.execute_select(
-        """
-        SELECT * FROM statuses s
-        WHERE s.id = %(status_id)s
+def get_card_status(status_id: int) -> Any | None:
+    "Find the first status matching the given id. Returns a JSON object."
+    query: str = """
+        SELECT * FROM statuses
+        WHERE statuses.id = %(id)s
         ;
         """
-        , {"status_id": status_id})
+    status: Any | None = data_manager.execute_select(query,
+        {"id": status_id})
 
     return status
 
 
-def get_boards():
+def get_boards() -> Any:
+    "Gather all boards. Returns a JSON object."
+    query: str = """
+    SELECT * FROM boards
     """
-    Gather all boards
-    :return:
-    """
-    return data_manager.execute_select(
-        """
-        SELECT * FROM boards
-        ;
-        """
-    )
+    boards: Any = data_manager.execute_select(query)
+
+    return boards
 
 
-def get_cards_for_board(board_id):
-
-    matching_cards = data_manager.execute_select(
-        """
+def get_cards_for_board(board_id) -> Any:
+    "Gather all cards for specified board. Returns a JSON object."
+    query: str = """
         SELECT * FROM cards
-        WHERE cards.board_id = %(board_id)s
+        WHERE cards.board_id = %(id)s
         ;
         """
-        , {"board_id": board_id})
+    matching_cards: Any = data_manager.execute_select(query,
+        {"id": board_id})
 
     return matching_cards
