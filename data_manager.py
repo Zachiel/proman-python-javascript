@@ -3,7 +3,7 @@
 # pyright: reportOptionalContextManager=false, reportOptionalSubscript=false
 import os
 from typing import Callable, Any
-from psycopg2 import connection
+from psycopg2._psycopg import connection
 from psycopg2.extras import RealDictCursor, RealDictRow
 import psycopg2
 
