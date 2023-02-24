@@ -1,12 +1,48 @@
 :root {
-    /* set root styles like font, page background, etc */
+  /* set root styles like font, page background, etc */
 }
 
 *,
 *:is(::before, ::after) {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 #boards {
-    background-color: green;
+  background-color: green;
+}
+
+.header__buttons{
+  gap: 0.5rem;
+}
+
+.header__button{
+  width:100%;
+  @media (width>577.98px){
+    width: fit-content;
+  }
+}
+
+.board__add-card-button {
+  padding: 0.25rem 0.5rem;
+  position: absolute;
+  left: 6.875rem;
+  top: 0.875rem;
+  width: 2rem;
+  height: 2rem;
+  z-index: 4;
+  color: #ffffff00;
+  overflow: hidden;
+  background-image: url('../images/plus.svg');
+  background-position: 50% 50%;
+  background-size: 60% 60%;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 480px) {
+  .board__add-card-button {
+    left: 8.5rem;
+    width: fit-content;
+    background-image: none;
+    color: white;
+  }
 }
