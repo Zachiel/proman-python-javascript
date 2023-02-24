@@ -1,7 +1,7 @@
 {% extends 'template.html' %}{% block content %}
     {% include 'header.html' %}
-    <div class="accordion container" id="accordionBoards">
-        <div class=" accordion-item position-relative">
+    <main class="accordion container" id="accordionBoards">
+        <div class=" accordion-item position-relative board">
             <button class="btn btn-secondary board__add-card-button">+ Add card</button>
             <h2 class="accordion-header" id="headingOne">
                 <div class="accordion-button align-items-baseline" type="button" data-bs-toggle="collapse"
@@ -13,11 +13,138 @@
             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                  data-bs-parent="#accordionBoards">
                 <div class="accordion-body">
-                    <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse
-                    plugin adds the appropriate classes that we use to style each element. These classes control the
-                    overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of
-                    this with custom CSS or overriding our default variables. It's also worth noting that just about any
-                    HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    <div class="row board__body">
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -33,12 +160,138 @@
             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                  data-bs-parent="#accordionBoards">
                 <div class="accordion-body">
-                    <strong>This is the second item's accordion body.</strong> It is hidden by default, until the
-                    collapse plugin adds the appropriate classes that we use to style each element. These classes
-                    control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                    modify any of this with custom CSS or overriding our default variables. It's also worth noting that
-                    just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit
-                    overflow.
+                    <div class="row board__body">
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,14 +307,140 @@
             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
                  data-bs-parent="#accordionBoards">
                 <div class="accordion-body">
-                    <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
-                    collapse plugin adds the appropriate classes that we use to style each element. These classes
-                    control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                    modify any of this with custom CSS or overriding our default variables. It's also worth noting that
-                    just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit
-                    overflow.
+                    <div class="row board__body">
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-3 board__status-column flex-column">
+                            <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                                <input class="board__status-input" value="Status title"> </h4>
+                            <div class="board__card-container container d-flex flex-column">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><input type="text" value="Card title" class="board__card-title"></h5>
+                                        <textarea class="card-text board__card-text" >Some quick example text to build on the card title and make up the bulk of the card's content.</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 {% endblock %}
