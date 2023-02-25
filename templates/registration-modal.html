@@ -1,12 +1,22 @@
-<div class="modal fade" id="login-modal" tabindex="-1">
+<div class="modal fade" id="registration-modal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Log in</h5>
+                <h5 class="modal-title">Registration</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="login-form">
+            <form id="registration-form">
                 <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">
+                            Username:
+                        </label>
+                        <input id="username" type="text" name="username" minlength="3" class="form-control" required
+                               pattern="^[a-zA-Z0-9]*$"
+                               oninvalid="this.setCustomValidity('Provide an username that is at least 3 characters long'+
+                               ' and contains only letters and numbers')"
+                               oninput="this.setCustomValidity('')"/>
+                    </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">
                             E-mail address:
@@ -33,11 +43,14 @@
                 <div class="row w-100">
                     <div class="order-sm-1 mb-3 mb-sm-0 col-10 col-sm-4 offset-1 offset-sm-2 text-center
                     d-flex justify-content-center align-items-end">
-                        <input type="submit" class="fs-5 btn btn-primary w-75" form="login-form" value="Log In"/>
+                        <input type="submit" class="fs-5 btn btn-primary w-75" form="registration-form"
+                               value="Register"/>
                     </div>
                     <div class="col-10 offset-1 col-sm-6 offset-sm-0 text-center">
-                        <h6 class="fs-6">Don't have an account?</h6>
-                        <button type="button" class="btn btn-secondary w-75"  data-bs-toggle="modal" data-bs-target="#registration-modal">Register!</button>
+                        <h6 class="fs-6">Already have an account?</h6>
+                        <button type="button" class="btn btn-secondary w-75" data-bs-toggle="modal"
+                                data-bs-target="#login-modal">Log in!
+                        </button>
                     </div>
                 </div>
             </div>
