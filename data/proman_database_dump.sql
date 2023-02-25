@@ -182,9 +182,6 @@ INSERT INTO public.statuses VALUES (4, 'done');
 
 
 
-
-
-
 INSERT INTO public.users VALUES (1, 'ProManAdmin', 'ProMan', 'Admin', 'admin@proman.com', '2023-02-22', '$2b$12$BosXgyg3cKMTSvOv.lNTQuGV87haDzWLmfEXWMXEkCKLFRNtlzK4q', true);
 
 

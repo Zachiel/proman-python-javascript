@@ -18,7 +18,8 @@ def get_cards_for_board(board_id: int) -> Any:
         JSON object
     """
     query: str = """
-        SELECT * FROM cards
+        SELECT *
+        FROM cards
         WHERE cards.board_id = %(id)s
         """
     matching_cards: Any = data_manager.execute_select(query,

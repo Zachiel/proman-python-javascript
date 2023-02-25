@@ -30,33 +30,43 @@ def index() -> str:
     -------
     Renders index.html page
     """
+
     return render_template('pages/index.html')
 
 
 @app.route("/api/boards")
 @app.route("/api/users/<int:user_id>/boards")
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>")
 @json_response
-def get_boards(user_id: int=0) -> Any:
+def get_boards(board_id: int=0, user_id: int=0) -> Any:
     """Get all boards from the database.
+            if user_id is specified show boards of that user.
 
     Parameters
     ----------
     user_id : int, optional
-        id of the user which boards to show, by default 0
+        id of the parent user, by default 0
+        optional only if requesting all boards
+    board_id : int, optional
+        id of a specific board, by default 0
+        optional only if requesting all boards
 
     Returns
     -------
     Any
         JSON object
     """
+
     return data_handler.boards.get_public_boards()
 
-
-@app.route("/api/boards/<int:board_id>/cards/")
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards/")
+@app.route("/api/boards/<int:board_id>/cards")
+@app.route("/api/boards/<int:board_id>/cards/<int:card_id>")
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards")
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards/<int:card_id>")
 @json_response
-def get_cards_for_board(board_id: int, user_id: int=0) -> Any:
+def get_cards_for_board(board_id: int, user_id: int=0, card_id: int=0) -> Any:
     """Get all cards belonging to the specified board.
+            if user_id is specified show boards of that user.
 
     Parameters
     ----------
@@ -64,6 +74,10 @@ def get_cards_for_board(board_id: int, user_id: int=0) -> Any:
         id of the parent board
     user_id : int, optional
         id of the parent user, by default 0
+        optional only if requesting for public board cards
+    card_id : int, optional
+        id of the requested card
+        optional only if requesting all cards
 
     Returns
     -------
@@ -74,7 +88,30 @@ def get_cards_for_board(board_id: int, user_id: int=0) -> Any:
     user: Any = session.get("user")
     if not user and not user_id:
         abort(401)
+
     return data_handler.cards.get_cards_for_board(board_id)
+
+@app.route("/api/users/")
+@app.route("/api/users/<int:user_id>/")
+@json_response
+def get_users(user_id: int=0) -> Any:
+    """Get all users from the database.
+            if user_id is specified show that user profile.
+            
+    Parameters
+    ----------
+    user_id : int, optional
+        id of the user which proifle to show
+        optional only if requesting all users
+    Returns
+    -------
+    Any
+        JSON object
+    """
+
+    return data_handler.users.get_users()
+
+
 
 
 def main() -> None:

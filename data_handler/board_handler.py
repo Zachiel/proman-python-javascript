@@ -36,7 +36,7 @@ def get_user_private_boards(user_id: int) -> Any:
         JSON object
     """
     query: str = """
-    SELECT *
+    SELECT b.*
     FROM boards AS b
     LEFT JOIN user_boards AS ub ON b.id = ub.board_id
     WHERE is_private = TRUE
