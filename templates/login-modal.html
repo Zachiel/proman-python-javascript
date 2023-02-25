@@ -18,7 +18,14 @@
                             Password:
                         </label>
                         <input id="email" type="password" name="password" minlength="8" class="form-control" required
-                               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.{8,}).*$">
+                               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.{8,}).*$"
+                               oninvalid="this.setCustomValidity('Provide a password that is at least 8 characters long'+
+                               ' and contains:'+
+                                '\n\tat least 1 lowercase character;' +
+                                 '\n\tat least 1 uppercase character;' +
+                                  '\n\tat least 1 number;' +
+                                   '\n\tat least 1 special character.')"
+                               oninput="this.setCustomValidity('')"/>
                     </div>
                 </div>
             </form>
