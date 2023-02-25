@@ -1,4 +1,4 @@
-"Utility module for file and response management."
+"Middleware utility module for file and response management."
 
 from functools import wraps
 from typing import Callable
