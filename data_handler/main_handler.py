@@ -7,7 +7,8 @@
     Use this module as a reference to others:
         >>> import data_handler.main_handler as data_handler
     And then reference specific types:
-        >>> data_handler.cards.<function_name>"""
+        >>> data_handler.cards.<function_name>
+"""
 # pylint: disable=unused-import
 from typing import Any
 import bcrypt

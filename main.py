@@ -1,14 +1,12 @@
 "Python server file containing routes and responses."
-### remove this line for implementation
-# pylint: disable=fixme
-###
 # pylint: disable=unused-import
 from typing import Any
 import uuid
 import re
 import mimetypes
-from flask import Flask, render_template, url_for, request, redirect, Response
+from flask import Flask, render_template, url_for, request, redirect
 from flask import session, abort
+from flask.typing import ResponseReturnValue
 from dotenv import load_dotenv
 from util import json_response
 import data_handler.main_handler as data_handler
@@ -28,88 +26,255 @@ def index() -> str:
 
     Returns
     -------
-    Renders index.html page
+    str
+        Renders index.html page
     """
 
     return render_template('pages/index.html')
 
 
-@app.route("/api/boards")
-@app.route("/api/users/<int:user_id>/boards")
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>")
-@json_response
-def get_boards(board_id: int=0, user_id: int=0) -> Any:
-    """Get all boards from the database.
-            if user_id is specified show boards of that user.
-
-    Parameters
-    ----------
-    user_id : int, optional
-        id of the parent user, by default 0
-        optional only if requesting all boards
-    board_id : int, optional
-        id of a specific board, by default 0
-        optional only if requesting all boards
+@app.route("/register")
+def registration() -> Any:
+    """Route to register a new user to database.
 
     Returns
     -------
-    Any
+    Any : bool
+        confirmation on user registration
+    """
+
+    fields: list[str] = ["username", "first_name", "last_name", "email"]
+    new_user: list[Any] = []
+    for item in fields:
+        new_user.append(request.form.get(item))
+    data_handler.users.register_new_user(new_user)
+
+
+@app.route("/login")
+def login() -> ResponseReturnValue:
+    """Route for checking credentials validity
+
+    Returns
+    -------
+    ResponseReturnValue
+        : str
+            error landing page
+        : Response
+            redirection to home page
+    """
+
+    valid_user: bool = False
+    if valid_user:
+        return redirect(url_for("index"))
+    return abort(401)
+
+
+@app.route("/logout")
+def logout() -> ResponseReturnValue:
+    """Route for logging out an user and clearing session data.
+
+    Returns
+    -------
+    ResponseReturnValue
+        redirection to home page
+    """
+
+    session.clear()
+    return redirect(url_for("index"))
+
+
+
+
+
+@app.route("/api/boards")
+@json_response
+def get_all_public_boards() -> ResponseReturnValue:
+    """Get all boards from the database.
+
+    Returns
+    -------
+    ResponseReturnValue : dict[str, ...]
         JSON object
     """
 
-    return data_handler.boards.get_public_boards()
+    return data_handler.boards.get_all_public_boards()
 
-@app.route("/api/boards/<int:board_id>/cards")
-@app.route("/api/boards/<int:board_id>/cards/<int:card_id>")
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards")
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards/<int:card_id>")
+
+@app.route("/api/boards/<int:board_id>")
 @json_response
-def get_cards_for_board(board_id: int, user_id: int=0, card_id: int=0) -> Any:
-    """Get all cards belonging to the specified board.
-            if user_id is specified show boards of that user.
+def get_public_board(board_id: int) -> ResponseReturnValue:
+    """Get specified board from the database.
 
     Parameters
     ----------
     board_id : int
-        id of the parent board
-    user_id : int, optional
-        id of the parent user, by default 0
-        optional only if requesting for public board cards
-    card_id : int, optional
-        id of the requested card
-        optional only if requesting all cards
+        id of the requested board
 
     Returns
     -------
-    Any
+    ResponseReturnValue : dict[str, ...]
         JSON object
     """
-    # TODO: Set up proper variables and checks
-    user: Any = session.get("user")
-    if not user and not user_id:
-        abort(401)
 
-    return data_handler.cards.get_cards_for_board(board_id)
+    return data_handler.boards.get_public_board(board_id)
 
-@app.route("/api/users/")
-@app.route("/api/users/<int:user_id>/")
+
+@app.route("/api/users/<int:user_id>/boards")
 @json_response
-def get_users(user_id: int=0) -> Any:
-    """Get all users from the database.
-            if user_id is specified show that user profile.
-            
+def get_all_user_public_boards(user_id: int) -> ResponseReturnValue:
+    """Get all boards owned by specified user from the database.
+
     Parameters
     ----------
-    user_id : int, optional
-        id of the user which proifle to show
-        optional only if requesting all users
+    user_id : int
+        id of the parent user
+
     Returns
     -------
-    Any
+    ResponseReturnValue : dict[str, ...]
         JSON object
     """
 
-    return data_handler.users.get_users()
+    return data_handler.boards.get_all_user_public_boards(user_id)
+
+
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>")
+@json_response
+def get_user_public_board(user_id: int, board_id: int) -> ResponseReturnValue:
+    """Get specified board owned by specified user from the database.
+
+    Parameters
+    ----------
+    user_id : int
+        id of the parent user
+    board_id : int
+        id of the requested board
+
+    Returns
+    -------
+    ResponseReturnValue : dict[str, ...]
+        JSON object
+    """
+
+    return data_handler.boards.get_user_public_board(user_id, board_id)
+
+
+@app.route("/api/boards/<int:board_id>/cards")
+@json_response
+def get_all_cards_public_board(board_id: int) -> ResponseReturnValue:
+    """Get all cards belonging to specified board from the database.
+
+    Parameters
+    ----------
+    board_id : int
+        id of parent board
+
+    Returns
+    -------
+    ResponseReturnValue : dict[str, ...]
+        JSON object
+    """
+
+    return data_handler.cards.get_all_cards_public_board(board_id)
+
+
+@app.route("/api/boards/<int:board_id>/cards/<int:card_id>")
+@json_response
+def get_card_public_board(board_id: int, card_id: int) -> ResponseReturnValue:
+    """Get specified card for a specified board from the database.
+
+    Parameters
+    ----------
+    board_id : int
+        id of parent board
+    card_id : int
+        id of specified card
+
+    Returns
+    -------
+    ResponseReturnValue : dict[str, ...]
+        JSON object
+    """
+
+    return data_handler.cards.get_card_public_board(board_id, card_id)
+
+
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards")
+@json_response
+def get_all_cards_user_public_board(user_id: int, board_id: int) -> ResponseReturnValue:
+    """Get all cards belonging to specified user board from the database.
+
+    Parameters
+    ----------
+    user_id : int
+        id of parent user
+    board_id : int
+        id of parent board
+
+    Returns
+    -------
+    ResponseReturnValue : dict[str, ...]
+        JSON object
+    """
+
+    return data_handler.cards.get_all_cards_user_public_board(user_id, board_id)
+
+
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards/<int:card_id>")
+@json_response
+def get_card_user_public_board(user_id: int, board_id: int, card_id: int) -> ResponseReturnValue:
+    """Get all cards belonging to the specified user board from the database.
+
+    Parameters
+    ----------
+    user_id : int
+        id of the parent user
+    board_id : int
+        id of the parent board
+    card_id : int
+        id of the requested card
+
+    Returns
+    -------
+    ResponseReturnValue : dict[str, ...]
+        JSON object
+    """
+
+    return data_handler.cards.get_card_user_public_board(user_id, board_id, card_id)
+
+
+@app.route("/api/users")
+@json_response
+def get_all_users() -> ResponseReturnValue:
+    """Get all users from the database.
+            
+    Returns
+    -------
+    ResponseReturnValue : dict[str, ...]
+        JSON object
+    """
+
+    return data_handler.users.get_all_users()
+
+
+@app.route("/api/users/<int:user_id>")
+@json_response
+def get_user(user_id: int) -> ResponseReturnValue:
+    """Get specified user profile from database.
+
+    Parameters
+    ----------
+    user_id : int
+        id of specified user
+
+    Returns
+    -------
+    ResponseReturnValue : dict[str, ...]
+        JSON object
+    """
+
+    return data_handler.users.get_user(user_id)
+
 
 
 
