@@ -89,6 +89,16 @@
 .board__status-input {
   text-align: center;
 }
+.board__status-input--new {
+  background-image: linear-gradient(rgba(0, 0, 153, 0.0666666667), rgba(0, 0, 153, 0.0666666667));
+  background-size: 100% 100%;
+  border-radius: 0.5rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+.board__status-input--new:focus {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
 
 .board__card-text {
   padding: 0;
