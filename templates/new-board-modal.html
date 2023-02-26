@@ -1,0 +1,31 @@
+<div class="modal fade" id="new-board-modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add new board</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="new-board-form">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="board-name" class="form-label">
+                            Board name:
+                        </label>
+                        <input id="board-name" name="board-name" type="text" class="form-control"
+                               placeholder="New Board" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="board-private" class="form-label">
+                            Private board:
+                        </label>
+                        <input id="board-private" type="checkbox" name="board-private" minlength="8"
+                               class="form-check-input" disabled/>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <input type="submit" class="fs-5 btn btn-primary" form="new-board-form" value="Add board"/>
+            </div>
+        </div>
+    </div>
+</div>
