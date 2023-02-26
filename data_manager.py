@@ -48,21 +48,69 @@ def get_connection_data(db_name: str | None=None) -> dict[str, Any] | None:
     }
 
 
-def execute_select(statement, variables=None, fetchall=True)\
-    -> list[RealDictRow] | RealDictRow | None:
-    """
-    Execute SELECT statement optionally parameterized.
-    Use fetchall=False to get back one value (fetchone)
+def execute_select(
+        statement: str,
+        variables: dict[str, Any] | None=None,
+        fetchall: bool=True)\
+        -> list[RealDictRow] | RealDictRow | None:
+    """Execute SELECT sql statement, optionally parameterized.
 
-    Example:
-    > execute_select('SELECT %(title)s; FROM shows',
-                                                variables={'title': 'Codecool'})
-    statement: SELECT statement
-    variables:  optional parameter dict, optional parameter fetchall"""
-    result_set = []
+    Parameters
+    ----------
+    statement : str
+        SQL query
+    variables : dict[str, Any] | None, optional
+        safe query string formatting key: value pairs, by default None
+        >>> execute_select('SELECT %(title)s; FROM shows',
+            variables={'title': 'Codecool'})
+    fetchall : bool, optional
+        should the function return all records `True` or just one `False`,
+        by default True
+
+    Returns
+    -------
+    list[RealDictRow] | RealDictRow | None
+        list of dictionary like objects or None
+    """
+
+    result_set: list[RealDictRow] | RealDictRow | None = []
     with establish_connection() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute(statement, variables)
-            result_set: list[RealDictRow] | RealDictRow | None\
-                = cursor.fetchall() if fetchall else cursor.fetchone()
+            result_set = cursor.fetchall() if fetchall else cursor.fetchone()
+
     return result_set
+
+
+def execute_insert(statement: str,
+        variables: dict[str, Any] | None=None,
+        returning: bool=False)\
+    -> RealDictRow | None:
+    """Execute INSERT sql statement, optionally parameterized.
+
+    Parameters
+    ----------
+    statement : str
+        SQL query
+    variables : dict[str, Any] | None, optional
+        safe query string formatting key: value pairs, by default None
+        >>> execute_select('INSERT INTO shows (title, score)
+            VALUES (%(title)s, %(score)s)',
+            variables={'title': 'Codecool', 'score': 6.9})
+    returning : bool, optional
+        if the query has a RETURNING statement set to `True`,
+        by default False
+
+    Returns
+    -------
+    RealDictRow | None
+        dictionary like object or None
+    """
+
+    result: Any | None = None
+    with establish_connection() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            cursor.execute(statement, variables)
+            result = cursor.fetchone() if returning else None
+
+    return result
