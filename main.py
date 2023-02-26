@@ -5,7 +5,7 @@ from typing import Any
 import uuid
 import re
 import mimetypes
-from flask import Flask, flash, get_flashed_messages, render_template, url_for, request, redirect
+from flask import Flask, flash, render_template, url_for, request, redirect
 from flask import session, abort
 from flask.typing import ResponseReturnValue
 from dotenv import load_dotenv
@@ -56,9 +56,7 @@ def registration() -> Any:
     """
 
     fields: list[str] = ["username", "first_name", "last_name", "email"]
-    new_user: list[Any] = []
-    for item in fields:
-        new_user.append(request.form.get(item))
+    new_user: list[Any] = [request.form.get(item) for item in fields]
     data_handler.users.register_new_user(new_user)
 
 
