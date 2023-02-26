@@ -19,11 +19,9 @@ export let cardsManager = {
 };
 
 export const cardsModal = () =>{
-    console.log('Activated cardsModal');
     const cardsModalEvent = e => {
         const cardTitle = e.currentTarget.querySelector('.board__card-title').value;
         const cardText = e.currentTarget.querySelector('.board__card-text').textContent;
-        console.log(`Got title: "${cardTitle}" and text: "${cardText}"`);
         const modalElement = document.querySelector('#card-modal');
         modalElement.querySelector('.board__card-title').value=cardTitle;
         modalElement.querySelector('.board__card-text').textContent=cardText;
@@ -32,7 +30,6 @@ export const cardsModal = () =>{
     const cards = document.querySelectorAll('.card');
     cards.forEach(card=>{
         card.addEventListener('dblclick', cardsModalEvent);
-        console.log('Added event to card');
     });
 };
 
