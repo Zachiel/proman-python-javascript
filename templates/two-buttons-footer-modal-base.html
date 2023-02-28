@@ -1,0 +1,17 @@
+{% extends 'modal-base.html' %}
+{% block modal_footer %}
+<div class="modal-footer container">
+    <div class="row w-100">
+        <div class="order-sm-1 mb-3 mb-sm-0 col-10 col-sm-4 offset-1 offset-sm-2 text-center
+                    d-flex justify-content-center align-items-end">
+            <input type="submit" class="fs-5 btn btn-primary w-75" form="{% block modal_form_id %}{% endblock %}" value="{% block modal_primary_button_text %}{% endblock %}"/>
+        </div>
+        <div class="col-10 offset-1 col-sm-6 offset-sm-0 text-center">
+            <h6 class="fs-6">{% block modal_secondary_button_description %}{% endblock %}</h6>
+            <button type="button" class="btn btn-secondary w-75" data-bs-toggle="modal"
+                    data-bs-target="#{% block modal_switch_id %}{% endblock %}">{% block modal_secondary_button_text %}{% endblock %}
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

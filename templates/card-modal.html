@@ -1,18 +1,7 @@
-<div class="modal fade" id="card-modal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <input type="text" value="Mockup title"
-                           class="board__card-title">
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="new-board-form">
-                <div class="modal-body">
-                    <textarea class="board__card-text">Mockup text</textarea>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+{% extends 'modal-base.html' %}
+{% block modal_id %}card-modal{% endblock %}
+{% block modal_form_id %}{% endblock %}
+{% block modal_title %}<input type="text" value="Mockup title" class="board__card-title" id="card-modal__input">{% endblock %}
+{% block modal_body %}
+    <textarea class="board__card-text" id="card-modal__textarea">Mockup text</textarea>
+{% endblock %}
