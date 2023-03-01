@@ -50,3 +50,24 @@ def get_user(user_id: int) -> Any:
     user: Any = data_manager.execute_select(query, {"id": user_id})
 
     return user
+
+
+def get_user_by_username(username: str) -> Any:
+
+
+    query: str = """
+    SELECT id, username
+    FROM users
+    WHERE username = %(username)s
+    """
+    user: Any = data_manager.execute_select(query, {"username": username})
+
+    return user
+
+
+def check_permission(user: str, board_id: int=0) -> bool:
+
+
+    if user and board_id > 0:
+        return True
+    return False
