@@ -1,6 +1,5 @@
 "Python server file containing routes and responses."
 # pylint: disable=unused-import
-### TODO: add method description to docstrings
 from typing import Any
 import uuid
 import re
@@ -8,9 +7,8 @@ import mimetypes
 from flask import Flask, flash, render_template, url_for, request, redirect
 from flask import session, abort
 from flask.typing import ResponseReturnValue
-from dotenv import load_dotenv
 from util import json_response
-import data_handler.main_handler as data_handler
+import data_handler.main_handler as dh
 
 UPLOAD_FOLDER: str = 'static\\uploads'
 
@@ -18,7 +16,6 @@ mimetypes.add_type('application/javascript', '.js')
 app: Flask = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
-load_dotenv()
 
 
 @app.route("/",
@@ -57,7 +54,7 @@ def registration() -> Any:
 
     fields: list[str] = ["username", "first_name", "last_name", "email"]
     new_user: list[Any] = [request.form.get(item) for item in fields]
-    data_handler.users.register_new_user(new_user)
+    dh.users.register_new_user(new_user)
 
 
 @app.route("/login",
@@ -130,21 +127,22 @@ def public_boards() -> ResponseReturnValue | None:
 
     if request.method == "POST":
         data: Any = request.json
-        data_handler.boards.post_public_board(data["title"])
+        dh.boards.post_public_board(data["title"])
         flash(f"board {data['title']} created succesfuly!", "message")
     else:
-        return data_handler.boards.get_all_public_boards()
+        return dh.boards.get_all_public_boards()
 
 
 @app.route("/api/boards/<int:board_id>",
-    methods=["GET", "PUT", "PATCH", "DELETE"])
+    methods=["GET", "PATCH", "DELETE"])
 @json_response
 def public_board(board_id: int) -> ResponseReturnValue | None:
-    """Get specified board from the database.
+    """Get specified board from the database, change it's property or delete
+    entire record.
 
     Methods
     -------
-    get, put, patch, delete
+    get, patch, delete
 
     Parameters
     ----------
@@ -158,15 +156,24 @@ def public_board(board_id: int) -> ResponseReturnValue | None:
     None
         flashed message
     """
-
-    return data_handler.boards.get_public_board(board_id)
+    if request.method != "GET":
+        user: str = session.get("user", default='')
+        is_allowed: bool = dh.users.check_permission(user, board_id)
+        if request.method == "PATCH" and is_allowed:
+            data: Any = request.json
+            dh.boards.patch_board(board_id, data)
+        if request.method == "DELETE" and is_allowed:
+            dh.boards.delete_board(board_id)
+    else:
+        return dh.boards.get_public_board(board_id)
 
 
 @app.route("/api/users/<int:user_id>/boards",
     methods=["GET", "POST"])
 @json_response
 def user_public_boards(user_id: int) -> ResponseReturnValue | None:
-    """Get all boards owned by specified user from the database.
+    """Get all boards owned by specified user from the database or create
+    new bord as it's owner (private or public).
 
     Methods
     -------
@@ -185,18 +192,24 @@ def user_public_boards(user_id: int) -> ResponseReturnValue | None:
         flashed message
     """
 
-    return data_handler.boards.get_all_user_public_boards(user_id)
+    if request.method == "POST":
+        data: Any = request.json
+        dh.boards.post_private_board(data["title"], user_id)
+        flash(f"board {data['title']} created succesfuly!", "message")
+    else:
+        return dh.boards.get_all_user_public_boards(user_id)
 
 
 @app.route("/api/users/<int:user_id>/boards/<int:board_id>",
-    methods=["GET", "PUT", "PATCH", "DELETE"])
+    methods=["GET", "PATCH", "DELETE"])
 @json_response
 def user_public_board(user_id: int, board_id: int) -> ResponseReturnValue | None:
-    """Get specified board owned by specified user from the database.
+    """Get specified board owned by specified user from the database, change
+    it's property or delete entirely if the user is allowed to.
 
     Methods
     -------
-    get, put, patch, delete
+    get, patch, delete
 
     Parameters
     ----------
@@ -213,14 +226,24 @@ def user_public_board(user_id: int, board_id: int) -> ResponseReturnValue | None
         flashed message
     """
 
-    return data_handler.boards.get_user_public_board(user_id, board_id)
+    if request.method != "GET":
+        user: str = session.get("user", default='')
+        is_allowed: bool = dh.users.check_permission(user, board_id)
+        if request.method == "PATCH" and is_allowed:
+            data: Any = request.json
+            dh.boards.patch_board(board_id, data)
+        if request.method == "DELETE" and is_allowed:
+            dh.boards.delete_board(board_id)
+    else:
+        return dh.boards.get_user_public_board(user_id, board_id)
 
 
 @app.route("/api/boards/<int:board_id>/cards",
     methods=["GET", "POST"])
 @json_response
 def cards_public_board(board_id: int) -> ResponseReturnValue | None:
-    """Get all cards belonging to specified board from the database.
+    """Get all cards belonging to specified public board from the database or
+    create new card.
 
     Methods
     -------
@@ -239,18 +262,24 @@ def cards_public_board(board_id: int) -> ResponseReturnValue | None:
         flashed message
     """
 
-    return data_handler.cards.get_all_cards_public_board(board_id)
+    if request.method == "POST":
+        data: Any = request.json
+        dh.cards.post_card(data["title"])
+        flash(f"card {data['title']} created succesfuly!", "message")
+    else:
+        return dh.cards.get_all_cards_public_board(board_id)
 
 
 @app.route("/api/boards/<int:board_id>/cards/<int:card_id>",
-    methods=["GET", "PUT", "PATCH", "DELETE"])
+    methods=["GET", "PATCH", "DELETE"])
 @json_response
 def card_public_board(board_id: int, card_id: int) -> ResponseReturnValue | None:
-    """Get specified card for a specified board from the database.
+    """Get specified card for a specified board from the database, change it's
+    property or delete entire record.
 
     Methods
     -------
-    get, put, patch, delete
+    get, patch, delete
 
     Parameters
     ----------
@@ -267,7 +296,16 @@ def card_public_board(board_id: int, card_id: int) -> ResponseReturnValue | None
         flashed message
     """
 
-    return data_handler.cards.get_card_public_board(board_id, card_id)
+    if request.method != "GET":
+        user: str = session.get("user", default='')
+        is_allowed: bool = dh.users.check_permission(user, board_id)
+        if request.method == "PATCH" and is_allowed:
+            data: Any = request.json
+            dh.cards.patch_card(card_id, data)
+        if request.method == "DELETE" and is_allowed:
+            dh.cards.delete_card(card_id)
+    else:
+        return dh.cards.get_card_public_board(board_id, card_id)
 
 
 @app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards",
@@ -275,7 +313,8 @@ def card_public_board(board_id: int, card_id: int) -> ResponseReturnValue | None
 @json_response
 def cards_user_public_board(
     user_id: int, board_id: int) -> ResponseReturnValue | None:
-    """Get all cards belonging to specified user board from the database.
+    """Get all cards belonging to specified user board from the database or
+    create a new card on a private board.
 
     Methods
     -------
@@ -296,19 +335,25 @@ def cards_user_public_board(
         flashed message
     """
 
-    return data_handler.cards.get_all_cards_user_public_board(user_id, board_id)
+    if request.method == "POST":
+        data: Any = request.json
+        dh.cards.post_card(data["title"])
+        flash(f"card {data['title']} created succesfuly!", "message")
+    else:
+        return dh.cards.get_all_cards_user_public_board(user_id, board_id)
 
 
 @app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards/<int:card_id>",
-    methods=["GET", "PUT", "PATCH", "DELETE"])
+    methods=["GET", "PATCH", "DELETE"])
 @json_response
 def card_user_public_board(
     user_id: int, board_id: int, card_id: int) -> ResponseReturnValue | None:
-    """Get all cards belonging to the specified user board from the database.
+    """Get all cards belonging to the specified user board from the database,
+    change it's property or delete entire record.
 
     Methods
     -------
-    get, put, patch, delete
+    get, patch, delete
 
     Parameters
     ----------
@@ -327,7 +372,16 @@ def card_user_public_board(
         flashed message
     """
 
-    return data_handler.cards.get_card_user_public_board(
+    if request.method != "GET":
+        user: str = session.get("user", default='')
+        is_allowed: bool = dh.users.check_permission(user, board_id)
+        if request.method == "PATCH" and is_allowed:
+            data: Any = request.json
+            dh.cards.patch_card(card_id, data)
+        if request.method == "DELETE" and is_allowed:
+            dh.cards.delete_card(card_id)
+    else:
+        return dh.cards.get_card_user_public_board(
         user_id, board_id, card_id)
 
 
@@ -349,18 +403,18 @@ def users() -> ResponseReturnValue | None:
         flashed message
     """
 
-    return data_handler.users.get_all_users()
+    return dh.users.get_all_users()
 
 
 @app.route("/api/users/<int:user_id>",
-    methods=["GET", "PUT", "PATCH", "DELETE"])
+    methods=["GET"])
 @json_response
-def user(user_id: int) -> ResponseReturnValue | None:
+def get_user(user_id: int) -> ResponseReturnValue | None:
     """Get specified user profile from database.
 
     Methods
     -------
-    get, put, patch, delete
+    get
 
     Parameters
     ----------
@@ -375,7 +429,7 @@ def user(user_id: int) -> ResponseReturnValue | None:
         flashed message
     """
 
-    return data_handler.users.get_user(user_id)
+    return dh.users.get_user(user_id)
 
 
 
