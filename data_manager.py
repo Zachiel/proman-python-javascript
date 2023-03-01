@@ -2,7 +2,7 @@
 # pylint: disable=no-name-in-module, unused-import
 # pyright: reportOptionalContextManager=false, reportOptionalSubscript=false
 import os
-from typing import Callable, Any
+from typing import Any
 from psycopg2._psycopg import connection
 from psycopg2.extras import RealDictCursor, RealDictRow
 import psycopg2
@@ -18,6 +18,7 @@ def establish_connection(connection_data: dict[str, Any] | None=None) \
     if connection_data is None:
         connection_data = get_connection_data()
     try:
+        # connect_str: str = f'postgresql://{user_name}:{password}@{host}/{database_name}
         connect_str: str = f"dbname={connection_data['dbname']}\
             user={connection_data['user']} host={connection_data['host']}\
             password={connection_data['password']}"
@@ -83,7 +84,7 @@ def execute_select(
 
 
 def execute_insert(statement: str,
-        variables: dict[str, Any] | None=None,
+        variables: dict[str, Any],
         returning: bool=False)\
     -> RealDictRow | None:
     """Execute INSERT sql statement, optionally parameterized.
@@ -92,9 +93,9 @@ def execute_insert(statement: str,
     ----------
     statement : str
         SQL query
-    variables : dict[str, Any] | None, optional
-        safe query string formatting key: value pairs, by default None
-        >>> execute_select('INSERT INTO shows (title, score)
+    variables : dict[str, Any]
+        safe query string formatting key: value pairs
+        >>> execute_insert('INSERT INTO shows (title, score)
             VALUES (%(title)s, %(score)s)',
             variables={'title': 'Codecool', 'score': 6.9})
     returning : bool, optional
@@ -114,3 +115,26 @@ def execute_insert(statement: str,
             result = cursor.fetchone() if returning else None
 
     return result
+
+
+def execute_other(statement: str,
+        variables: dict[str, Any] | list[Any]) -> None:
+    """Execute DELETE or PATCH sql statement.
+
+    Parameters
+    ----------
+    statement : str
+        SQL query
+    variables : dict[str, Any] | list[Any]
+        data used in safe query string formatting
+        >>> execute_other('DELETE FROM shows \\
+            WHERE title = %(title)s',
+            variables={'title': 'Codenormie'})
+        >>> execute_other('UPDATE shows SET title = %s, \\
+            genre = %s WHERE id = %s',
+            variables=["How to exit vim?", "horror", 2137])
+    """
+
+    with establish_connection() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            cursor.execute(statement, variables)
