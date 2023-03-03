@@ -27,19 +27,17 @@ function boardBuilder(board) {
     //             <div class="board" data-board-id=${board.id}>${board.title}</div>
     //             <button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button>
     //         </div>`;
-    return `<div class="accordion-item position-relative board" id="board${board.id}">
-                <button class="btn btn-secondary board__add-card-button" data-board-id=${board.id}>+ Add card</button>
+    return `<div class="accordion-item position-relative board">
+                <button class="btn btn-secondary board__add-card-button">+ Add card</button>
                 <h2 class="accordion-header" id="heading${board.id}">
-                    <div class="accordion-button align-items-baseline collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse${board.id}"
-                            aria-expanded="false" aria-controls="collapse${board.id}">
+                    <div class="accordion-button align-items-baseline collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${board.id}" aria-expanded="false" aria-controls="collapse${board.id}" data-board-id="${board.id}">
                         <h3 class="m-0 me-3 fs-4">${board.title}</h3>
                     </div>
                 </h2>
                 <div id="collapse${board.id}" class="accordion-collapse collapse" aria-labelledby="heading${board.id}"
                         data-bs-parent="#accordionBoards">
                     <div class="accordion-body">
-                        <div class="row board__body">
+                        <div class="row board__body" data-board-id="${board.id}">
                         </div>
                     </div>
                 </div>
@@ -47,11 +45,11 @@ function boardBuilder(board) {
 }
 
 function statusBuilder(status) {
-    return `<div class="col-12 col-sm-6 col-md-4 col-lg-3 board__status-column flex-column" data-status-id="${status.id}">
+    return `<div class="col-12 col-sm-6 col-md-4 col-lg-3 board__status-column flex-column">
                 <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
                     <input class="board__status-input" value="${status.title}"/>
                 </h4>
-                <div class="board__card-container container d-flex flex-column">
+                <div class="board__card-container container d-flex flex-column" data-status-id="${status.id}">
                 </div>
             </div>`;
 }

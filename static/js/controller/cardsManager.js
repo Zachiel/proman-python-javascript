@@ -1,68 +1,84 @@
-import {dataHandler} from "../data/dataHandler.js";
-import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
-import {domManager} from "../view/domManager.js";
+import { dataHandler } from "../data/dataHandler.js";
+import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
+import { domManager } from "../view/domManager.js";
 
 export let cardsManager = {
-    loadCards: async function (boardId) {
+    loadCards: async function (boardId, statusId) {
         const cards = await dataHandler.getCardsByBoardId(boardId);
         for (let card of cards) {
-            const cardBuilder = htmlFactory(htmlTemplates.card);
-            const content = cardBuilder(card);
-            domManager.addChild(`.board[data-board-id="${boardId}"]`, content);
-            domManager.addEventListener(
-                `.card[data-card-id="${card.id}"]`,
-                "click",
-                deleteButtonHandler
-            );
+            if (card.status_id == statusId) {
+                const cardBuilder = htmlFactory(htmlTemplates.card);
+                const content = cardBuilder(card);
+                await domManager.addChild(
+                    `.board__card-container[data-status-id="${statusId}"]`,
+                    content
+                );
+                // domManager.addEventListener(
+                //     `.card[data-card-id="${card.id}"]`,
+                //     "click",
+                //     deleteButtonHandler
+                // );
+            }
         }
     },
 };
 
 const checkIfElementIsCard = (element) => {
     let result = false;
-    const cardElemsClasses = ['card', 'card-body', 'card-title', 'board__card-title', 'board__card-text'];
-    cardElemsClasses.forEach(className => {
+    const cardElemsClasses = [
+        "card",
+        "card-body",
+        "card-title",
+        "board__card-title",
+        "board__card-text",
+    ];
+    cardElemsClasses.forEach((className) => {
         if (element.classList.contains(className)) {
-            result = true
+            result = true;
         }
     });
     return result;
-}
+};
 
-const getWholeCardElement = element => {
+const getWholeCardElement = (element) => {
     if (element) {
-        if (element.classList.contains('card')) {
+        if (element.classList.contains("card")) {
             return element;
         }
-        if (element.tagName === 'body') {
+        if (element.tagName === "body") {
             return false;
         }
         return getWholeCardElement(element.parentElement);
     } else {
         return false;
     }
-}
+};
 
 export const cardsModal = () => {
-    const cardsModalEvent = e => {
+    const cardsModalEvent = (e) => {
         const targetElement = e.target;
         if (checkIfElementIsCard(targetElement)) {
             const card = getWholeCardElement(targetElement);
             if (card) {
-                const cardTitle = card.querySelector('.board__card-title').value;
-                const cardText = card.querySelector('.board__card-text').textContent;
-                const modalElement = document.querySelector('#card-modal');
-                document.querySelector('#card-modal__input').value = cardTitle;
-                document.querySelector('#card-modal__textarea').textContent = cardText;
+                const cardTitle =
+                    card.querySelector(".board__card-title").value;
+                const cardText =
+                    card.querySelector(".board__card-text").textContent;
+                const modalElement = document.querySelector("#card-modal");
+                document.querySelector("#card-modal__input").value = cardTitle;
+                document.querySelector("#card-modal__textarea").textContent =
+                    cardText;
                 const myModal = new bootstrap.Modal(modalElement).show();
             } else {
-                console.log("Couldn't get the card for DOM element: ", targetElement);
+                console.log(
+                    "Couldn't get the card for DOM element: ",
+                    targetElement
+                );
             }
         }
     };
-    const boardsAccordion = document.querySelector('#boardsAccordion');
-    boardsAccordion.addEventListener('dblclick', cardsModalEvent);
+    const boardsAccordion = document.querySelector("#boardsAccordion");
+    boardsAccordion.addEventListener("dblclick", cardsModalEvent);
 };
 
-function deleteButtonHandler(clickEvent) {
-}
+function deleteButtonHandler(clickEvent) {}

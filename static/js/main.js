@@ -1,10 +1,10 @@
-import {boardsManager} from "./controller/boardsManager.js";
-import {cardsModal} from "./controller/cardsManager.js";
+import { boardsManager } from "./controller/boardsManager.js";
+import { cardsModal } from "./controller/cardsManager.js";
 
 function init() {
-    //boardsManager.loadBoards();
+    boardsManager.loadBoards();
     cardsModal();
 }
-window.onload=()=>{init()};
-
-
+window.onload = () => {
+    init();
+};
