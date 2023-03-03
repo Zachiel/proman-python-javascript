@@ -30,13 +30,13 @@ function boardBuilder(board) {
     return `<div class="accordion-item position-relative board" id="board${board.id}">
                 <button class="btn btn-secondary board__add-card-button" data-board-id=${board.id}>+ Add card</button>
                 <h2 class="accordion-header" id="heading${board.id}">
-                    <div class="accordion-button align-items-baseline" type="button" data-bs-toggle="collapse"
+                    <div class="accordion-button align-items-baseline collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse${board.id}"
-                            aria-expanded="true" aria-controls="collapse${board.id}">
+                            aria-expanded="false" aria-controls="collapse${board.id}">
                         <h3 class="m-0 me-3 fs-4">${board.title}</h3>
                     </div>
                 </h2>
-                <div id="collapse${board.id}" class="accordion-collapse collapse show" aria-labelledby="heading${board.id}"
+                <div id="collapse${board.id}" class="accordion-collapse collapse" aria-labelledby="heading${board.id}"
                         data-bs-parent="#accordionBoards">
                     <div class="accordion-body">
                         <div class="row board__body">
