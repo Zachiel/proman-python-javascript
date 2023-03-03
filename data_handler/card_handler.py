@@ -3,6 +3,7 @@
     Queries regarding
 """
 from typing import Any
+from functools import reduce
 import data_manager
 
 
@@ -47,7 +48,7 @@ def get_card_public_board(board_id: int, card_id: int) -> Any:
 
     query: str = """
         SELECT c.*
-        FROM cards
+        FROM cards AS c
         LEFT JOIN boards AS b ON b.id = c.board_id
         WHERE c.board_id = %(board_id)s
         AND c.id = %(card_id)s
@@ -122,3 +123,40 @@ def get_card_user_public_board(user_id: int, board_id: int, card_id: int) -> Any
         {"user_id": user_id, "board_id": board_id, "card_id": card_id})
 
     return matching_card
+
+
+def delete_card(card_id: int) -> None:
+
+
+    query: str = """
+    DELETE FROM cards
+    WHERE card_id = %(id)s
+    """
+    data_manager.execute_other(query, {"id": card_id})
+
+
+def patch_card(card_id: int, data: dict[str, Any]) -> None:
+
+
+    data_insert_str: str = "SET %s = %s" + ", %s = %s" * (len(data)-1)
+    query: str = "UPDATE cards" + data_insert_str + "WHERE id = %(card_id)s"
+    data_list: list[str | int] = list(reduce(lambda k, v: k + v, data.items()))
+    data_list.append(card_id)
+    data_manager.execute_other(query, data_list)
+
+
+def post_card(board_id: int, status_id: int, title: str) -> None:
+
+
+    query_cards: str = """
+        INSERT INTO cards (board_id, status_id, title, body, card_order)
+        VALUES (
+            %s, %s, %s, '', 
+            (SELECT
+                (MAX(card_order) + 1)
+                FROM cards
+                WHERE board_id = %(board_id)s)
+        )
+        """
+    data_manager.execute_insert(query_cards,
+        [board_id, status_id, title], True)

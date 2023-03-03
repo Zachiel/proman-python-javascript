@@ -15,4 +15,5 @@ import bcrypt
 import data_handler.card_handler as cards
 import data_handler.board_handler as boards
 import data_handler.user_handler as users
+import data_handler.status_handler as status
 import data_manager

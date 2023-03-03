@@ -67,3 +67,20 @@ def patch_status(status_id: int, data: dict[str, Any]) -> None:
     data_list: list[str | int] = list(reduce(lambda k, v: k + v, data.items()))
     data_list.append(status_id)
     data_manager.execute_other(query, data_list)
+
+
+def delete_status(board_id: int, status_id: int) -> None:
+
+
+    query_statuses: str = """
+    DELETE FROM statuses
+    WHERE id = %(status_id)s
+    """
+    query_board_statuses: str = """
+    DELETE FROM board_statuses
+    WHERE status_id = %(status_id)s
+    AND board_id = %(board_id)s
+    """
+    data_manager.execute_other(query_board_statuses,
+        {"status_id": status_id, "board_id": board_id})
+    data_manager.execute_other(query_statuses, {"status_id": status_id})
