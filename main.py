@@ -57,7 +57,7 @@ def registration() -> Any:
     fields: list[str] = ["username", "first_name", "last_name", "email", "password"]
     new_user: dict[Any] = {}
     for item in fields:
-        new_user[item] = request.form.get(item)
+        new_user[item] = request.json[item]
     return dh.users.register_new_user(new_user)
 
 

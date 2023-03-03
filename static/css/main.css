@@ -50,7 +50,7 @@
 
 .board__body {
   flex-wrap: nowrap;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .board__card-container {
