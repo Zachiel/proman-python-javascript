@@ -18,8 +18,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
 
 
-@app.route("/",
-    methods="GET")
+@app.route("/",\
+    methods=["GET"])
 def index() -> str:
     """Root route which displays all boards and cards.
 
@@ -36,8 +36,8 @@ def index() -> str:
     return render_template('pages/index.html')
 
 
-@app.route("/register",
-    methods="POST")
+@app.route("/register",\
+    methods=["POST"])
 def registration() -> Any:
     """Route to register a new user to database.
 
@@ -57,8 +57,8 @@ def registration() -> Any:
     dh.users.register_new_user(new_user)
 
 
-@app.route("/login",
-    methods="POST")
+@app.route("/login",\
+    methods=["POST"])
 def login() -> ResponseReturnValue:
     """Route for checking credentials validity
 
@@ -82,8 +82,8 @@ def login() -> ResponseReturnValue:
     return abort(401)
 
 
-@app.route("/logout",
-    methods="GET")
+@app.route("/logout",\
+    methods=["GET"])
 def logout() -> ResponseReturnValue:
     """Route for logging out an user and clearing session data.
 
@@ -104,7 +104,7 @@ def logout() -> ResponseReturnValue:
 
 
 
-@app.route("/api/boards",
+@app.route("/api/boards",\
     methods=["GET", "POST"])
 @json_response
 def public_boards() -> ResponseReturnValue | None:
@@ -133,7 +133,7 @@ def public_boards() -> ResponseReturnValue | None:
         return dh.boards.get_all_public_boards()
 
 
-@app.route("/api/boards/<int:board_id>",
+@app.route("/api/boards/<int:board_id>",\
     methods=["GET", "PATCH", "DELETE"])
 @json_response
 def public_board(board_id: int) -> ResponseReturnValue | None:
@@ -168,7 +168,7 @@ def public_board(board_id: int) -> ResponseReturnValue | None:
         return dh.boards.get_public_board(board_id)
 
 
-@app.route("/api/users/<int:user_id>/boards",
+@app.route("/api/users/<int:user_id>/boards",\
     methods=["GET", "POST"])
 @json_response
 def user_public_boards(user_id: int) -> ResponseReturnValue | None:
@@ -200,7 +200,7 @@ def user_public_boards(user_id: int) -> ResponseReturnValue | None:
         return dh.boards.get_all_user_public_boards(user_id)
 
 
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>",
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>",\
     methods=["GET", "PATCH", "DELETE"])
 @json_response
 def user_public_board(user_id: int, board_id: int) -> ResponseReturnValue | None:
@@ -238,7 +238,7 @@ def user_public_board(user_id: int, board_id: int) -> ResponseReturnValue | None
         return dh.boards.get_user_public_board(user_id, board_id)
 
 
-@app.route("/api/boards/<int:board_id>/cards",
+@app.route("/api/boards/<int:board_id>/cards",\
     methods=["GET", "POST"])
 @json_response
 def cards_public_board(board_id: int) -> ResponseReturnValue | None:
@@ -264,13 +264,13 @@ def cards_public_board(board_id: int) -> ResponseReturnValue | None:
 
     if request.method == "POST":
         data: Any = request.json
-        dh.cards.post_card(data["title"])
+        dh.cards.post_card(board_id, data["status_id"], data["title"])
         flash(f"card {data['title']} created succesfuly!", "message")
     else:
         return dh.cards.get_all_cards_public_board(board_id)
 
 
-@app.route("/api/boards/<int:board_id>/cards/<int:card_id>",
+@app.route("/api/boards/<int:board_id>/cards/<int:card_id>",\
     methods=["GET", "PATCH", "DELETE"])
 @json_response
 def card_public_board(board_id: int, card_id: int) -> ResponseReturnValue | None:
@@ -308,7 +308,7 @@ def card_public_board(board_id: int, card_id: int) -> ResponseReturnValue | None
         return dh.cards.get_card_public_board(board_id, card_id)
 
 
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards",
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards",\
     methods=["GET", "POST"])
 @json_response
 def cards_user_public_board(
@@ -337,13 +337,13 @@ def cards_user_public_board(
 
     if request.method == "POST":
         data: Any = request.json
-        dh.cards.post_card(data["title"])
+        dh.cards.post_card(board_id, data["status_id"], data["title"])
         flash(f"card {data['title']} created succesfuly!", "message")
     else:
         return dh.cards.get_all_cards_user_public_board(user_id, board_id)
 
 
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards/<int:card_id>",
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards/<int:card_id>",\
     methods=["GET", "PATCH", "DELETE"])
 @json_response
 def card_user_public_board(
@@ -385,7 +385,73 @@ def card_user_public_board(
         user_id, board_id, card_id)
 
 
-@app.route("/api/users",
+@app.route("/api/boards/<int:board_id>/statuses",\
+    methods=["GET", "POST"])
+@json_response
+def statuses_public_board(board_id: int) -> ResponseReturnValue | None:
+
+
+    if request.method == "POST":
+        data: Any = request.json
+        dh.status.post_status(board_id, data["title"])
+        flash(f"status {data['title']} created succesfuly!", "message")
+    else:
+        return dh.status.get_board_statuses(board_id)
+
+
+@app.route("/api/boards/<int:board_id>/statuses/<int:status_id>",\
+    methods=["GET", "PATCH"])
+@json_response
+def status_public_board(board_id: int, status_id: int
+    ) -> ResponseReturnValue | None:
+
+
+    if request.method != "GET":
+        user: str = session.get("user", default='')
+        is_allowed: bool = dh.users.check_permission(user, board_id)
+        if request.method == "PATCH" and is_allowed:
+            data: Any = request.json
+            dh.status.patch_status(status_id, data)
+        if request.method == "DELETE" and is_allowed:
+            dh.status.delete_status(board_id, status_id)
+    else:
+        return dh.status.get_status(status_id)
+
+
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards",\
+    methods=["GET", "POST"])
+@json_response
+def statuses_user_public_board(board_id: int) -> ResponseReturnValue | None:
+
+
+    if request.method == "POST":
+        data: Any = request.json
+        dh.status.post_status(board_id, data["title"])
+        flash(f"status {data['title']} created succesfuly!", "message")
+    else:
+        return dh.status.get_board_statuses(board_id)
+
+
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/statuses/<int:status_id>",\
+    methods=["GET", "PATCH", "DELETE"])
+@json_response
+def status_user_public_board(board_id: int, status_id: int
+    ) -> ResponseReturnValue | None:
+
+
+    if request.method != "GET":
+        user: str = session.get("user", default='')
+        is_allowed: bool = dh.users.check_permission(user, board_id)
+        if request.method == "PATCH" and is_allowed:
+            data: Any = request.json
+            dh.status.patch_status(status_id, data)
+        if request.method == "DELETE" and is_allowed:
+            dh.status.delete_status(board_id, status_id)
+    else:
+        return dh.status.get_status(status_id)
+
+
+@app.route("/api/users",\
     methods=["GET", "POST"])
 @json_response
 def users() -> ResponseReturnValue | None:
@@ -406,7 +472,7 @@ def users() -> ResponseReturnValue | None:
     return dh.users.get_all_users()
 
 
-@app.route("/api/users/<int:user_id>",
+@app.route("/api/users/<int:user_id>",\
     methods=["GET"])
 @json_response
 def get_user(user_id: int) -> ResponseReturnValue | None:
