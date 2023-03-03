@@ -8,8 +8,8 @@ export let statusesManager = {
         const statuses = await dataHandler.getStatusesByBoardId(boardId);
         for (let status of statuses) {
             const statusBuilder = htmlFactory(htmlTemplates.status);
-            const content = statusBuilder(status);
-            await domManager.addChild(
+            const content = statusBuilder(status, boardId);
+            domManager.addChild(
                 `.board__body[data-board-id="${boardId}"]`,
                 content
             );

@@ -6,11 +6,11 @@ export let cardsManager = {
     loadCards: async function (boardId, statusId) {
         const cards = await dataHandler.getCardsByBoardId(boardId);
         for (let card of cards) {
-            if (card.status_id == statusId) {
+            if (card.status_id == statusId && card.board_id == boardId) {
                 const cardBuilder = htmlFactory(htmlTemplates.card);
                 const content = cardBuilder(card);
-                await domManager.addChild(
-                    `.board__card-container[data-status-id="${statusId}"]`,
+                domManager.addChild(
+                    `.board__card-container[data-board-id="${boardId}"][data-status-id="${statusId}"]`,
                     content
                 );
                 // domManager.addEventListener(

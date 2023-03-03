@@ -44,12 +44,12 @@ function boardBuilder(board) {
             </div>`;
 }
 
-function statusBuilder(status) {
+function statusBuilder(status, boardId) {
     return `<div class="col-12 col-sm-6 col-md-4 col-lg-3 board__status-column flex-column">
                 <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
                     <input class="board__status-input" value="${status.title}"/>
                 </h4>
-                <div class="board__card-container container d-flex flex-column" data-status-id="${status.id}">
+                <div class="board__card-container container d-flex flex-column" data-board-id="${boardId}" data-status-id="${status.id}">
                 </div>
             </div>`;
 }
