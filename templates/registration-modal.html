@@ -4,10 +4,10 @@
 {% block modal_form_id %}registration-form{% endblock %}
 {% block modal_body %}
     <div class="mb-3">
-        <label for="first-name" class="form-label">
+        <label for="first_name" class="form-label">
             First name:
         </label>
-        <input id="first-name" type="text" name="first-name" class="form-control"/>
+        <input id="first_name" type="text" name="first_name" class="form-control"/>
     </div>
     <div class="mb-3">
         <label for="last_name" class="form-label">
@@ -35,7 +35,7 @@
         <label for="password" class="form-label">
             Password*:
         </label>
-        <input id="email" type="password" name="password" minlength="8" class="form-control" required
+        <input id="password" type="password" name="password" minlength="8" class="form-control" required
                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.{8,}).*$"
                oninvalid="this.setCustomValidity('Provide a password that is at least 8 characters long'+
                                ' and contains:'+
