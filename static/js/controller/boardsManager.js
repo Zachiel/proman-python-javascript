@@ -15,7 +15,6 @@ export let boardsManager = {
                 "click",
                 showHideButtonHandler
             );
-            // await statusesManager.loadStatuses(board.id);
         }
     },
 };
@@ -25,8 +24,7 @@ async function showHideButtonHandler(clickEvent) {
     const boardBody = document.querySelector(
         `.row.board__body[data-board-id="${boardId}"]`
     );
-    while (boardBody.lastChild) {
-        boardBody.removeChild(boardBody.lastChild);
+    if (boardBody.children.length == 0) {
+        statusesManager.loadStatuses(boardId);
     }
-    statusesManager.loadStatuses(boardId);
 }
