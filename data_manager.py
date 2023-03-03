@@ -51,7 +51,7 @@ def get_connection_data(db_name: str | None=None) -> dict[str, Any] | None:
 
 def execute_select(
         statement: str,
-        variables: dict[str, Any] | None=None,
+        variables: dict[str, Any] | list[str | int] | None=None,
         fetchall: bool=True)\
         -> list[RealDictRow] | RealDictRow | None:
     """Execute SELECT sql statement, optionally parameterized.
@@ -84,7 +84,7 @@ def execute_select(
 
 
 def execute_insert(statement: str,
-        variables: dict[str, Any],
+        variables: dict[str, Any] | list[str | int],
         returning: bool=False)\
     -> RealDictRow | None:
     """Execute INSERT sql statement, optionally parameterized.
@@ -93,7 +93,7 @@ def execute_insert(statement: str,
     ----------
     statement : str
         SQL query
-    variables : dict[str, Any]
+    variables : dict[str, Any] | list[str | int]
         safe query string formatting key: value pairs
         >>> execute_insert('INSERT INTO shows (title, score)
             VALUES (%(title)s, %(score)s)',
@@ -118,14 +118,14 @@ def execute_insert(statement: str,
 
 
 def execute_other(statement: str,
-        variables: dict[str, Any] | list[Any]) -> None:
+        variables: dict[str, Any] | list[str | int]) -> None:
     """Execute DELETE or PATCH sql statement.
 
     Parameters
     ----------
     statement : str
         SQL query
-    variables : dict[str, Any] | list[Any]
+    variables : dict[str, Any] | list[str | int]
         data used in safe query string formatting
         >>> execute_other('DELETE FROM shows \\
             WHERE title = %(title)s',
