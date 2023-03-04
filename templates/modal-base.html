@@ -5,7 +5,7 @@
                 <h5 class="modal-title">{% block modal_title %}{% endblock %}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="{% block modal_form_id %}{% endblock %}">
+            <form id="{% block modal_form_id %}{% endblock %}" method="post">
                 <div class="modal-body">
                     {% block modal_body %}{% endblock %}
                 </div>

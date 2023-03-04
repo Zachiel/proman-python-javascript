@@ -9,6 +9,7 @@ from flask import session, abort
 from flask.typing import ResponseReturnValue
 from util import json_response
 import data_handler.main_handler as dh
+import dotenv
 
 UPLOAD_FOLDER: str = 'static\\uploads'
 
@@ -38,6 +39,7 @@ def index() -> str:
 
 @app.route("/register",\
     methods=["POST"])
+@json_response
 def registration() -> Any:
     """Route to register a new user to database.
 
@@ -52,9 +54,11 @@ def registration() -> Any:
         confirmation on user registration
     """
 
-    fields: list[str] = ["username", "first_name", "last_name", "email"]
-    new_user: list[Any] = [request.form.get(item) for item in fields]
-    dh.users.register_new_user(new_user)
+    fields: list[str] = ["username", "first_name", "last_name", "email", "password"]
+    new_user: dict[Any] = {}
+    for item in fields:
+        new_user[item] = request.json[item]
+    return dh.users.register_new_user(new_user)
 
 
 @app.route("/login",\
@@ -498,12 +502,10 @@ def get_user(user_id: int) -> ResponseReturnValue | None:
     return dh.users.get_user(user_id)
 
 
-
-
-
 def main() -> None:
     """Starts flask server listening on localhost:5000
     """
+    dotenv.load_dotenv()
 
     app.run(debug=True, host='0.0.0.0', port=5000)
 
