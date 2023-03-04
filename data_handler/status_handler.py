@@ -24,7 +24,7 @@ def get_board_statuses(board_id: int) -> Any:
 
 
     query: str = """
-    SELECT s.title, bs.order
+    SELECT *
     FROM board_statuses AS bs
     LEFT JOIN statuses AS s ON s.id = bs.status_id
     WHERE bs.board_id = %(id)s
