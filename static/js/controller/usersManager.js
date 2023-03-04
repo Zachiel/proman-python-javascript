@@ -1,4 +1,6 @@
+'use strict';
 import {dataHandler} from "../data/dataHandler.js";
+import {showMessage} from './messages.js';
 
 export const usersHandler = {
     register_event: (e) => {
@@ -12,6 +14,6 @@ export const usersHandler = {
         }
         const result = dataHandler.registerUser(JSON.stringify(user));
 
-        result.then(response => console.log(response));
+        result.then(response => showMessage(`${response['message']}`, response['success']?'success':'error'));
     },
 }
