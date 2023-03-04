@@ -7,6 +7,9 @@ export let cardsManager = {
         const cards = await dataHandler.getCardsByBoardId(boardId);
         for (let card of cards) {
             if (card.status_id == statusId && card.board_id == boardId) {
+                if (card.body == null) {
+                    card.body = "";
+                }
                 const cardBuilder = htmlFactory(htmlTemplates.card);
                 const content = cardBuilder(card);
                 domManager.addChild(
