@@ -115,4 +115,35 @@
   padding: 1px;
 }
 
+.message-box {
+  transition-property: top;
+  transition-duration: 250ms;
+  transition-timing-function: ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  top: -125px;
+  right: 20px;
+  background-color: lightgrey;
+  color: #222222;
+  font-size: 16px;
+  font-weight: 700;
+  z-index: 9999;
+  border-radius: 20px;
+}
+.message-box--shown {
+  top: 20px;
+}
+.message-box--success {
+  background-color: lightgreen;
+  color: darkgreen;
+}
+.message-box--error {
+  background-color: lightpink;
+  color: darkred;
+}
+
 /*# sourceMappingURL=main.css.map */
