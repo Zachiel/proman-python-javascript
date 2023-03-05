@@ -25,6 +25,9 @@ export let dataHandler = {
     },
     registerUser: async function (userJSON) {
         return await apiPost('/register', userJSON);
+    },
+    loginUser: async function (loginJSON){
+        return await apiPost('/login',loginJSON);
     }
 };
 

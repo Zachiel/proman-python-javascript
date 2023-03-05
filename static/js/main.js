@@ -8,9 +8,12 @@ function init() {
     boardsManager.loadBoards();
     cardsModal();
     document.querySelector('#registration-form').addEventListener('submit', usersHandler.register_event);
+    document.querySelector('#login-form').addEventListener('submit', usersHandler.login_event);
+
 }
 
 
 window.onload = () => {
     init()
+
 };
