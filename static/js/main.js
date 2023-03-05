@@ -9,7 +9,7 @@ function init() {
     cardsModal();
     document.querySelector('#registration-form').addEventListener('submit', usersHandler.register_event);
     document.querySelector('#login-form').addEventListener('submit', usersHandler.login_event);
-
+    document.querySelector('.header__button--account').addEventListener('click', usersHandler.account_event)
 }
 
 

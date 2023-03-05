@@ -35,5 +35,8 @@ export const usersHandler = {
                 }
             }
         )
+    },
+    account_event: e=> {
+        showMessage(`You're logged in as: ${e.currentTarget.dataset.username}`);
     }
 }

@@ -8,9 +8,16 @@
             <button class="header__button btn btn-primary" data-bs-toggle="modal" data-bs-target="#login-modal">Log In
             </button>
         {% else %}
+            <div class="logged-in-container">
             <a href="/logout">
                 <button class="header__button btn btn-primary">Log out</button>
             </a>
+            <button class="header__button header__button--account btn btn-primary" data-username="{{ user['username'] }}">
+                <svg class="logged-in-svg">
+                    <use class="logged-in-icon" href="{{ url_for('static', filename='images/sprite.svg') }}#icon-user-rounded"/>
+                </svg>
+            </button>
+            </div>
         {% endif %}
     </ul>
 </header>

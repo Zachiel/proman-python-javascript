@@ -20,6 +20,23 @@
   @media (width>577.98px) {
     width: fit-content;
   }
+  &--account{
+    padding: 0.375rem;
+    width: fit-content;
+  }
+}
+
+.logged-in-container{
+  display: flex;
+  gap: 0.5rem;
+}
+
+.logged-in-svg{
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: white;
+  stroke: white;
 }
 
 .board__add-card-button {
@@ -137,6 +154,7 @@
   font-weight: 700;
   z-index: 9999;
   border-radius: 20px;
+  box-shadow: 10px 5px 5px rgba(0,0,0,0.3);
   &--shown{
     top: 20px;
   }
@@ -149,3 +167,4 @@
     color: darkred;
   }
 }
+

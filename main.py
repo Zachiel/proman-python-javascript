@@ -39,7 +39,7 @@ def index() -> str:
     if 'email' in session:
         user = dh.users.get_user_by_email(session['email'])
         if len(user) == 1:
-            user=user[0]
+            user = user[0]
             logged_in = True
     return render_template('pages/index.html', logged_in=logged_in, user=user)
 
