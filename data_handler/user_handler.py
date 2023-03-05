@@ -45,8 +45,9 @@ def register_new_user(user: dict[Any]) -> dict[str | bool, str]:
         try:
             db_response = data_manager.execute_insert("""
             INSERT INTO users (username, first_name, last_name, registration_date, password, email) VALUES (%s, %s, %s, %s, %s, %s)
-            RETURNING *;""", [user['username'], user['first_name'], user['last_name'], user['registration_date'], user['password'],
-                  user['email']],
+            RETURNING *;""", [user['username'], user['first_name'], user['last_name'], user['registration_date'],
+                              user['password'],
+                              user['email']],
                                                       True)
             if db_response is None:
                 response['success'] = False
@@ -55,6 +56,21 @@ def register_new_user(user: dict[Any]) -> dict[str | bool, str]:
             response['success'] = False
             response['message'] = 'An error occured during communication with the database'
     return response
+
+
+def validate_login(login_data):
+    email = login_data['email']
+    print(email)
+    password = login_data['password'].encode('UTF-8')
+    user = get_user_by_email(email)
+    if len(user) > 0:
+        user = user[0]
+        if bcrypt.checkpw(password, user['password'].encode()):
+            return {'success': True, 'message': f'Successfully logged in as {user["username"]}'}
+        else:
+            return {'success': False, 'message': 'Wrong password'}
+    else:
+        return {'success': False, 'message': 'No user with such e-mail address'}
 
 
 def get_all_users() -> Any:
@@ -131,7 +147,7 @@ def get_user_by_email(user_email: str) -> Any:
     """
     query: str = """
         SELECT id, username, first_name AS name, last_name AS surname, email,
-            registration_date AS registered
+            registration_date AS registered, password
         FROM users
         WHERE email = %(email)s
         """

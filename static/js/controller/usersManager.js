@@ -16,4 +16,24 @@ export const usersHandler = {
 
         result.then(response => showMessage(`${response['message']}`, response['success']?'success':'error'));
     },
+    login_event: (e) =>{
+        e.preventDefault();
+        const login = {
+            email: e.target.email.value,
+            password: e.target.password.value,
+        }
+        console.log(e.target, '\n', login);
+        const result = dataHandler.loginUser(JSON.stringify(login));
+        result.then(response =>{
+                if (response['success'])
+                {
+                    showMessage(`${response['message']}`, 'success',1000);
+                    setTimeout(()=>{window.location = '/';},1100);
+                }
+                else{
+                    showMessage(`${response['message']}`, 'error');
+                }
+            }
+        )
+    }
 }

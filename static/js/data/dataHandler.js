@@ -5,14 +5,14 @@ export let dataHandler = {
     getBoard: async function (boardId) {
         // the board is retrieved and then the callback function is called with the board
     },
-    getStatuses: async function () {
-        // the statuses are retrieved and then the callback function is called with the statuses
+    getStatusesByBoardId: async function (boardId) {
+        return await apiGet(`/api/boards/${boardId}/statuses`);
     },
     getStatus: async function (statusId) {
         // the status is retrieved and then the callback function is called with the status
     },
     getCardsByBoardId: async function (boardId) {
-        return await apiGet(`/api/boards/${boardId}/cards/`);
+        return await apiGet(`/api/boards/${boardId}/cards`);
     },
     getCard: async function (cardId) {
         // the card is retrieved and then the callback function is called with the card
@@ -25,6 +25,9 @@ export let dataHandler = {
     },
     registerUser: async function (userJSON) {
         return await apiPost('/register', userJSON);
+    },
+    loginUser: async function (loginJSON){
+        return await apiPost('/login',loginJSON);
     }
 };
 
@@ -51,11 +54,9 @@ async function apiPost(url, payload) {
     }
 }
 
-async function apiDelete(url) {
-}
 
-async function apiPut(url) {
-}
+async function apiDelete(url) {}
 
-async function apiPatch(url) {
-}
+async function apiPut(url) {}
+
+async function apiPatch(url) {}

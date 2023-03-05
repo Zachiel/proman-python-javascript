@@ -11,8 +11,9 @@ export const showMessage = (message, type = undefined, timeout = 3000) => {
     paragraph.style.height = 'fit-content';
     messageBox.prepend(paragraph);
     body.prepend(messageBox);
-    setTimeout(()=>{},200)
-    messageBox.classList.add('message-box--shown');
+    setTimeout(() => {
+        messageBox.classList.add('message-box--shown');
+    }, 1);
     setTimeout(() => {
         messageBox.classList.remove('message-box--shown');
     }, timeout);

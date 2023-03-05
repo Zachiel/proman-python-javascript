@@ -17,6 +17,7 @@ mimetypes.add_type('application/javascript', '.js')
 app: Flask = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
+app.secret_key = b'B!qKM7y!;;N7qie5'
 
 
 @app.route("/",\
@@ -33,8 +34,14 @@ def index() -> str:
     str
         Renders index.html page
     """
-
-    return render_template('pages/index.html')
+    user = None
+    logged_in = False
+    if 'email' in session:
+        user = dh.users.get_user_by_email(session['email'])
+        if len(user) == 1:
+            user=user[0]
+            logged_in = True
+    return render_template('pages/index.html', logged_in=logged_in, user=user)
 
 
 @app.route("/register",\
@@ -63,27 +70,12 @@ def registration() -> Any:
 
 @app.route("/login",\
     methods=["POST"])
+@json_response
 def login() -> ResponseReturnValue:
-    """Route for checking credentials validity
-
-    Methods
-    -------
-    post
-        safe payload exchange for input values
-
-    Returns
-    -------
-    ResponseReturnValue
-        : str
-            error landing page
-        : Response
-            redirection to home page
-    """
-
-    valid_user: bool = False
-    if valid_user:
-        return redirect(url_for("index"))
-    return abort(401)
+    response = dh.users.validate_login(request.json)
+    if response['success']:
+        session['email'] = request.json['email']
+    return response
 
 
 @app.route("/logout",\
@@ -101,7 +93,7 @@ def logout() -> ResponseReturnValue:
         redirection to home page
     """
 
-    session.clear()
+    session.pop('email', None)
     return redirect(url_for("index"))
 
 
