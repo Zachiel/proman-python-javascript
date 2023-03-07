@@ -1,12 +1,3 @@
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 15.1
--- Dumped by pg_dump version 15.1
-
-
-
 ALTER TABLE ONLY public.user_boards DROP CONSTRAINT fk_user_boards_user_id;
 ALTER TABLE ONLY public.user_boards DROP CONSTRAINT fk_user_boards_board_id;
 ALTER TABLE ONLY public.cards DROP CONSTRAINT fk_cards_status_id;
@@ -191,13 +182,13 @@ INSERT INTO public.cards VALUES (2, 1, 1, 'new card 2', 2, false, NULL);
 INSERT INTO public.cards VALUES (3, 1, 2, 'in progress card', 1, false, NULL);
 INSERT INTO public.cards VALUES (4, 1, 3, 'planning', 1, false, NULL);
 INSERT INTO public.cards VALUES (5, 1, 4, 'done card 1', 1, false, NULL);
-INSERT INTO public.cards VALUES (6, 1, 4, 'done card 1', 2, false, NULL);
-INSERT INTO public.cards VALUES (7, 2, 1, 'new card 1', 1, false, NULL);
-INSERT INTO public.cards VALUES (8, 2, 1, 'new card 2', 2, false, NULL);
-INSERT INTO public.cards VALUES (9, 2, 2, 'in progress card', 1, false, NULL);
-INSERT INTO public.cards VALUES (10, 2, 3, 'planning', 1, false, NULL);
-INSERT INTO public.cards VALUES (11, 2, 4, 'done card 1', 1, false, NULL);
-INSERT INTO public.cards VALUES (12, 2, 4, 'done card 1', 2, false, NULL);
+INSERT INTO public.cards VALUES (6, 1, 4, 'done card 2', 2, false, NULL);
+INSERT INTO public.cards VALUES (7, 2, 1, 'board 2 card 1', 1, false, NULL);
+INSERT INTO public.cards VALUES (8, 2, 1, 'board 2 card 2', 2, false, NULL);
+INSERT INTO public.cards VALUES (9, 2, 2, 'board 2 wip', 1, false, NULL);
+INSERT INTO public.cards VALUES (10, 2, 3, 'board 2 planning', 1, false, NULL);
+INSERT INTO public.cards VALUES (11, 2, 4, 'board 2 done 1', 1, false, NULL);
+INSERT INTO public.cards VALUES (12, 2, 4, 'board 2 done 2', 2, false, NULL);
 
 
 

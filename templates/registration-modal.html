@@ -4,8 +4,20 @@
 {% block modal_form_id %}registration-form{% endblock %}
 {% block modal_body %}
     <div class="mb-3">
+        <label for="first_name" class="form-label">
+            First name:
+        </label>
+        <input id="first_name" type="text" name="first_name" class="form-control"/>
+    </div>
+    <div class="mb-3">
+        <label for="last_name" class="form-label">
+            Last name:
+        </label>
+        <input id="last_name" type="text" name="last_name" class="form-control"/>
+    </div>
+    <div class="mb-3">
         <label for="username" class="form-label">
-            Username:
+            Username*:
         </label>
         <input id="username" type="text" name="username" minlength="3" class="form-control" required
                pattern="^[a-zA-Z0-9]*$"
@@ -15,15 +27,15 @@
     </div>
     <div class="mb-3">
         <label for="email" class="form-label">
-            E-mail address:
+            E-mail address*:
         </label>
-        <input id="email" name="email" type="email" class="form-control" placeholder="" required>
+        <input id="registration-email" name="email" type="email" class="form-control" placeholder="" required>
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">
-            Password:
+            Password*:
         </label>
-        <input id="email" type="password" name="password" minlength="8" class="form-control" required
+        <input id="registration-password" type="password" name="password" minlength="8" class="form-control" required
                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.{8,}).*$"
                oninvalid="this.setCustomValidity('Provide a password that is at least 8 characters long'+
                                ' and contains:'+
@@ -33,6 +45,9 @@
                                    '\n\tat least 1 special character.')"
                oninput="this.setCustomValidity('')"/>
     </div>
+    <p>
+    * - required
+    </p>
 {% endblock %}
 {% block modal_primary_button_text %}Register{% endblock %}
 {% block modal_secondary_button_description %}Already have an account{% endblock %}

@@ -9,6 +9,7 @@ from flask import session, abort
 from flask.typing import ResponseReturnValue
 from util import json_response
 import data_handler.main_handler as dh
+import dotenv
 
 UPLOAD_FOLDER: str = 'static\\uploads'
 
@@ -16,6 +17,7 @@ mimetypes.add_type('application/javascript', '.js')
 app: Flask = Flask(__name__, static_url_path='/static')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
+app.secret_key = b'B!qKM7y!;;N7qie5'
 
 
 @app.route("/",\
@@ -32,12 +34,19 @@ def index() -> str:
     str
         Renders index.html page
     """
-
-    return render_template('pages/index.html')
+    user = None
+    logged_in = False
+    if 'email' in session:
+        user = dh.users.get_user_by_email(session['email'])
+        if len(user) == 1:
+            user = user[0]
+            logged_in = True
+    return render_template('pages/index.html', logged_in=logged_in, user=user)
 
 
 @app.route("/register",\
     methods=["POST"])
+@json_response
 def registration() -> Any:
     """Route to register a new user to database.
 
@@ -52,34 +61,21 @@ def registration() -> Any:
         confirmation on user registration
     """
 
-    fields: list[str] = ["username", "first_name", "last_name", "email"]
-    new_user: list[Any] = [request.form.get(item) for item in fields]
-    dh.users.register_new_user(new_user)
+    fields: list[str] = ["username", "first_name", "last_name", "email", "password"]
+    new_user: dict[Any] = {}
+    for item in fields:
+        new_user[item] = request.json[item]
+    return dh.users.register_new_user(new_user)
 
 
 @app.route("/login",\
     methods=["POST"])
+@json_response
 def login() -> ResponseReturnValue:
-    """Route for checking credentials validity
-
-    Methods
-    -------
-    post
-        safe payload exchange for input values
-
-    Returns
-    -------
-    ResponseReturnValue
-        : str
-            error landing page
-        : Response
-            redirection to home page
-    """
-
-    valid_user: bool = False
-    if valid_user:
-        return redirect(url_for("index"))
-    return abort(401)
+    response = dh.users.validate_login(request.json)
+    if response['success']:
+        session['email'] = request.json['email']
+    return response
 
 
 @app.route("/logout",\
@@ -97,7 +93,7 @@ def logout() -> ResponseReturnValue:
         redirection to home page
     """
 
-    session.clear()
+    session.pop('email', None)
     return redirect(url_for("index"))
 
 
@@ -498,12 +494,10 @@ def get_user(user_id: int) -> ResponseReturnValue | None:
     return dh.users.get_user(user_id)
 
 
-
-
-
 def main() -> None:
     """Starts flask server listening on localhost:5000
     """
+    dotenv.load_dotenv()
 
     app.run(debug=True, host='0.0.0.0', port=5000)
 
