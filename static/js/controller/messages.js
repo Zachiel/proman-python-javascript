@@ -13,7 +13,7 @@ export const showMessage = (message, type = undefined, timeout = 3000) => {
     body.prepend(messageBox);
     setTimeout(() => {
         messageBox.classList.add('message-box--shown');
-    }, 1);
+    }, 10);
     setTimeout(() => {
         messageBox.classList.remove('message-box--shown');
     }, timeout);
