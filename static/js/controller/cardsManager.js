@@ -66,10 +66,10 @@ export const cardsModal = () => {
                 const cardTitle =
                     card.querySelector(".board__card-title").value;
                 const cardText =
-                    card.querySelector(".board__card-text").textContent;
+                    card.querySelector(".board__card-text").value;
                 const modalElement = document.querySelector("#card-modal");
                 document.querySelector("#card-modal__input").value = cardTitle;
-                document.querySelector("#card-modal__textarea").textContent =
+                document.querySelector("#card-modal__textarea").value =
                     cardText;
                 const myModal = new bootstrap.Modal(modalElement).show();
             } else {
