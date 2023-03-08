@@ -5,11 +5,26 @@ export let dataHandler = {
     getBoard: async function (boardId) {
         // the board is retrieved and then the callback function is called with the board
     },
+    createNewBoard: async function (boardTitle) {
+        // creates new board, saves it and calls the callback function with its data
+    },
+    updateBoard: async function (payload) {
+        return await apiPatch(`/api/boards/${payload.id}`, payload);
+    },
     getStatusesByBoardId: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/statuses`);
     },
     getStatus: async function (statusId) {
         // the status is retrieved and then the callback function is called with the status
+    },
+    createNewStatus: async function (payload) {
+        return await apiPost(`api/boards/${payload.boardId}/statuses`, payload);
+    },
+    updateStatus: async function (payload) {
+        return await apiPatch(
+            `api/boards/${payload.boardId}/statuses/${payload.statusId}`,
+            { title: payload.title }
+        );
     },
     getCardsByBoardId: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/cards`);
@@ -17,18 +32,18 @@ export let dataHandler = {
     getCard: async function (cardId) {
         // the card is retrieved and then the callback function is called with the card
     },
-    createNewBoard: async function (boardTitle) {
-        // creates new board, saves it and calls the callback function with its data
-    },
     createNewCard: async function (cardTitle, boardId, statusId) {
         // creates new card, saves it and calls the callback function with its data
     },
-    registerUser: async function (userJSON) {
-        return await apiPost('/register', userJSON);
+    updateCard: async function (boardId, cardId, payload) {
+        return await apiPatch(`api/boards/${boardId}/cards/${cardId}`, payload);
     },
-    loginUser: async function (loginJSON){
-        return await apiPost('/login',loginJSON);
-    }
+    registerUser: async function (userJSON) {
+        return await apiPost("/register", userJSON);
+    },
+    loginUser: async function (loginJSON) {
+        return await apiPost("/login", loginJSON);
+    },
 };
 
 async function apiGet(url) {
@@ -44,9 +59,9 @@ async function apiPost(url, payload) {
     let response = await fetch(url, {
         method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
         },
-        body: payload,
+        body: JSON.stringify(payload),
     });
 
     if (response.ok) {
@@ -54,9 +69,20 @@ async function apiPost(url, payload) {
     }
 }
 
-
 async function apiDelete(url) {}
 
-async function apiPut(url) {}
+// async function apiPut(url) {}
 
-async function apiPatch(url) {}
+async function apiPatch(url, payload) {
+    let response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+        return await response.json();
+    }
+}

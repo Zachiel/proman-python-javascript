@@ -1,5 +1,6 @@
 "Python server file containing routes and responses."
 # pylint: disable=unused-import
+import sys
 from typing import Any
 import uuid
 import re
@@ -7,9 +8,9 @@ import mimetypes
 from flask import Flask, flash, render_template, url_for, request, redirect
 from flask import session, abort
 from flask.typing import ResponseReturnValue
+import dotenv
 from util import json_response
 import data_handler.main_handler as dh
-import dotenv
 
 UPLOAD_FOLDER: str = 'static\\uploads'
 
@@ -396,7 +397,7 @@ def statuses_public_board(board_id: int) -> ResponseReturnValue | None:
 
 
 @app.route("/api/boards/<int:board_id>/statuses/<int:status_id>",\
-    methods=["GET", "PATCH"])
+    methods=["GET", "PATCH", "DELETE"])
 @json_response
 def status_public_board(board_id: int, status_id: int
     ) -> ResponseReturnValue | None:

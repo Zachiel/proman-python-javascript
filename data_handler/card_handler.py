@@ -138,11 +138,14 @@ def delete_card(card_id: int) -> None:
 def patch_card(card_id: int, data: dict[str, Any]) -> None:
 
 
-    data_insert_str: str = "SET %s = %s" + ", %s = %s" * (len(data)-1)
-    query: str = "UPDATE cards" + data_insert_str + "WHERE id = %(card_id)s"
-    data_list: list[str | int] = list(reduce(lambda k, v: k + v, data.items()))
-    data_list.append(card_id)
-    data_manager.execute_other(query, data_list)
+    query: str = """
+    UPDATE cards 
+    SET title = %(title)s,
+        body = %(body)s
+    WHERE id = %(id)s
+    """
+    data.update({"id": card_id})
+    data_manager.execute_other(query, data)
 
 
 def post_card(board_id: int, status_id: int, title: str) -> None:

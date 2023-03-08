@@ -127,9 +127,10 @@ def get_user_by_username(username: str) -> Any:
 
 
 def check_permission(user: str, board_id: int = 0) -> bool:
-    if user and board_id > 0:
-        return True
-    return False
+    # if user and board_id > 0:
+    #     return True
+    # return False
+    return True
 
 
 def get_user_by_email(user_email: str) -> Any:

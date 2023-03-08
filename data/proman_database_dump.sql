@@ -32,7 +32,7 @@ SET default_table_access_method = heap;
 CREATE TABLE public.board_statuses (
     board_id integer NOT NULL,
     status_id integer NOT NULL,
-    "order" integer NOT NULL
+    status_order integer NOT NULL
 );
 
 
@@ -109,8 +109,8 @@ ALTER SEQUENCE public.statuses_id_seq OWNED BY public.statuses.id;
 CREATE TABLE public.user_boards (
     board_id integer NOT NULL,
     user_id integer NOT NULL,
-    role character varying(200)[] NOT NULL,
-    CONSTRAINT check_roles CHECK (((role)::text = ANY (ARRAY[('owner'::character varying)::text, ('member'::character varying)::text, ('guest'::character varying)::text])))
+    user_role character varying(200)[] NOT NULL,
+    CONSTRAINT check_roles CHECK (((user_role)::text = ANY (ARRAY[('owner'::character varying)::text, ('member'::character varying)::text, ('guest'::character varying)::text])))
 );
 
 

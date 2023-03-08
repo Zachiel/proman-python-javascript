@@ -21,6 +21,11 @@ export let cardsManager = {
                 //     "click",
                 //     deleteButtonHandler
                 // );
+                domManager.addEventListener(
+                    `input[data-card-id="${card.id}"]`,
+                    "change",
+                    updateHandler
+                );
             }
         }
     },
@@ -57,6 +62,17 @@ const getWholeCardElement = (element) => {
     }
 };
 
+function deleteButtonHandler(clickEvent) {}
+
+function updateHandler() {
+    let boardId = parseInt(this.dataset.boardId);
+    let cardId = parseInt(this.dataset.cardId);
+    dataHandler.updateCard(boardId, cardId, {
+        title: this.value,
+        body: this.parentElement.nextElementSibling.value,
+    });
+}
+
 export const cardsModal = () => {
     const cardsModalEvent = (e) => {
         const targetElement = e.target;
@@ -65,8 +81,7 @@ export const cardsModal = () => {
             if (card) {
                 const cardTitle =
                     card.querySelector(".board__card-title").value;
-                const cardText =
-                    card.querySelector(".board__card-text").value;
+                const cardText = card.querySelector(".board__card-text").value;
                 const modalElement = document.querySelector("#card-modal");
                 document.querySelector("#card-modal__input").value = cardTitle;
                 document.querySelector("#card-modal__textarea").value =
@@ -83,5 +98,3 @@ export const cardsModal = () => {
     const boardsAccordion = document.querySelector("#boardsAccordion");
     boardsAccordion.addEventListener("dblclick", cardsModalEvent);
 };
-
-function deleteButtonHandler(clickEvent) {}
