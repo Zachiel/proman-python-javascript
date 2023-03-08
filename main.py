@@ -1,5 +1,6 @@
 "Python server file containing routes and responses."
 # pylint: disable=unused-import
+import sys
 from typing import Any
 import uuid
 import re
@@ -7,9 +8,9 @@ import mimetypes
 from flask import Flask, flash, render_template, url_for, request, redirect
 from flask import session, abort
 from flask.typing import ResponseReturnValue
+import dotenv
 from util import json_response
 import data_handler.main_handler as dh
-import dotenv
 
 UPLOAD_FOLDER: str = 'static\\uploads'
 
@@ -155,7 +156,7 @@ def public_board(board_id: int) -> ResponseReturnValue | None:
     if request.method != "GET":
         user: str = session.get("user", default='')
         is_allowed: bool = dh.users.check_permission(user, board_id)
-        if request.method == "PATCH" and is_allowed:
+        if request.method == "PATCH":
             data: Any = request.json
             dh.boards.patch_board(board_id, data)
         if request.method == "DELETE" and is_allowed:

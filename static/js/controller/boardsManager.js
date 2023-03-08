@@ -15,6 +15,11 @@ export let boardsManager = {
                 "click",
                 showHideButtonHandler
             );
+            domManager.addEventListener(
+                `input[data-board-id="${board.id}"]`,
+                "change",
+                updateHandler
+            );
         }
     },
 };
@@ -27,4 +32,12 @@ async function showHideButtonHandler(clickEvent) {
     if (boardBody.children.length == 0) {
         statusesManager.loadStatuses(boardId);
     }
+}
+
+async function updateHandler() {
+    dataHandler.updateBoard({
+        title: this.value,
+        is_private: this.dataset.boardPrivate,
+        id: parseInt(this.dataset.boardId),
+    });
 }

@@ -2,6 +2,7 @@
 
     Queries regarding boards.
 """
+import sys
 from typing import Any
 from functools import reduce
 import data_manager
@@ -190,8 +191,9 @@ def delete_board(board_id: int, user_id: int=0) -> None:
 def patch_board(board_id: int, data: dict[str, Any]) -> None:
 
 
-    data_insert_str: str = "SET %s = %s" + ", %s = %s" * (len(data)-1)
-    query: str = "UPDATE boards" + data_insert_str + "WHERE id = %(board_id)s"
-    data_list: list[str | int] = list(reduce(lambda k, v: k + v, data.items()))
-    data_list.append(board_id)
-    data_manager.execute_other(query, data_list)
+    query: str = """
+        UPDATE boards
+        SET title = %(title)s, is_private = %(is_private)s
+        WHERE id = %(id)s
+        """
+    data_manager.execute_other(query, data)
