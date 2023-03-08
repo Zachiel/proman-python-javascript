@@ -23,7 +23,7 @@ export let dataHandler = {
     updateStatus: async function (payload) {
         return await apiPatch(
             `api/boards/${payload.boardId}/statuses/${payload.statusId}`,
-            payload.title
+            { title: payload.title }
         );
     },
     getCardsByBoardId: async function (boardId) {
@@ -34,6 +34,9 @@ export let dataHandler = {
     },
     createNewCard: async function (cardTitle, boardId, statusId) {
         // creates new card, saves it and calls the callback function with its data
+    },
+    updateCard: async function (boardId, cardId, payload) {
+        return await apiPatch(`api/boards/${boardId}/cards/${cardId}`, payload);
     },
     registerUser: async function (userJSON) {
         return await apiPost("/register", userJSON);

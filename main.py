@@ -156,7 +156,7 @@ def public_board(board_id: int) -> ResponseReturnValue | None:
     if request.method != "GET":
         user: str = session.get("user", default='')
         is_allowed: bool = dh.users.check_permission(user, board_id)
-        if request.method == "PATCH":
+        if request.method == "PATCH" and is_allowed:
             data: Any = request.json
             dh.boards.patch_board(board_id, data)
         if request.method == "DELETE" and is_allowed:
@@ -397,7 +397,7 @@ def statuses_public_board(board_id: int) -> ResponseReturnValue | None:
 
 
 @app.route("/api/boards/<int:board_id>/statuses/<int:status_id>",\
-    methods=["GET", "PATCH"])
+    methods=["GET", "PATCH", "DELETE"])
 @json_response
 def status_public_board(board_id: int, status_id: int
     ) -> ResponseReturnValue | None:

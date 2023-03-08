@@ -63,11 +63,13 @@ def post_status(board_id: int, title: str) -> Any:
 def patch_status(status_id: int, data: dict[str, Any]) -> None:
 
 
-    data_insert_str: str = "SET %s = %s" + ", %s = %s" * (len(data)-1)
-    query: str = "UPDATE statuses" + data_insert_str + "WHERE id = %s"
-    data_list: list[str | int] = list(reduce(lambda k, v: k + v, data.items()))
-    data_list.append(status_id)
-    data_manager.execute_other(query, data_list)
+    query: str = """
+        UPDATE statuses
+        SET title = %(title)s
+        WHERE id = %(id)s
+        """
+    data.update({"id": status_id})
+    data_manager.execute_other(query, data)
 
 
 def delete_status(board_id: int, status_id: int) -> None:

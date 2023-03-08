@@ -32,17 +32,18 @@ function showHideButtonHandler(clickEvent) {
 }
 
 function updateHandler() {
-    let statusId = parseInt(this.dataset.boardId);
+    let statusId = parseInt(this.dataset.statusId);
+    let boardId = parseInt(this.dataset.boardId);
     if (statusId <= 4) {
         statusesManager.postStatus({
             title: this.value,
-            boardId: parseInt(this.dataset.boardId),
+            boardId: boardId,
             statusId: statusId,
         });
     } else {
         dataHandler.updateStatus({
             title: this.value,
-            boardId: parseInt(this.dataset.boardId),
+            boardId: boardId,
             statusId: statusId,
         });
     }

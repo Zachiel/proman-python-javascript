@@ -122,7 +122,7 @@ def post_public_board(title: str, owner_id: int=0) -> None:
         RETURNING id
         """
     query_user_boards: str = """
-        INSERT INTO user_boards (board_id, user_id, role)
+        INSERT INTO user_boards (board_id, user_id, user_role)
         VALUES (
             %(id)s,
             %(owner_id)s,
@@ -153,7 +153,7 @@ def post_private_board(title: str, owner_id: int) -> None:
         RETURNING id
         """
     query_user_boards: str = """
-        INSERT INTO user_boards (board_id, user_id, role)
+        INSERT INTO user_boards (board_id, user_id, user_role)
         VALUES (
             %(id)s,
             %(owner_id)s,
