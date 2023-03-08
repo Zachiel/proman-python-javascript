@@ -32,7 +32,7 @@ SET default_table_access_method = heap;
 CREATE TABLE public.board_statuses (
     board_id integer NOT NULL,
     status_id integer NOT NULL,
-    "order" integer NOT NULL
+    status_order integer NOT NULL
 );
 
 

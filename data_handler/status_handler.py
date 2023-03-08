@@ -2,6 +2,7 @@
 
     Queries regarding statuses.
 """
+import sys
 from typing import Any
 from functools import reduce
 import data_manager
@@ -45,18 +46,18 @@ def post_status(board_id: int, title: str) -> Any:
     RETURNING id
     """
     query_board_statuses: str = """
-    INSERT INTO board_statuses (status_id, board_id, order)
+    INSERT INTO board_statuses (status_id, board_id, status_order)
     VALUES (
         %(status_id)s, %(board_id)s, 
         (SELECT
-            (MAX(order) + 1)
+            (MAX(status_order) + 1)
             FROM board_statuses
             WHERE board_id = %(board_id)s)
     )
     """
-    status_id: Any = data_manager.execute_insert(query_statuses, {"title": title}, True)
+    status: Any = data_manager.execute_insert(query_statuses, {"title": title}, True)
     data_manager.execute_insert(query_board_statuses,
-        {"status_id": status_id, "board_id": board_id})
+        {"status_id": status["id"], "board_id": board_id})
 
 
 def patch_status(status_id: int, data: dict[str, Any]) -> None:

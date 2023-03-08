@@ -18,14 +18,11 @@ export let dataHandler = {
         // the status is retrieved and then the callback function is called with the status
     },
     createNewStatus: async function (payload) {
-        return await apiPost(
-            `api/boards/${payload.id}/statuses`,
-            payload.title
-        );
+        return await apiPost(`api/boards/${payload.boardId}/statuses`, payload);
     },
     updateStatus: async function (payload) {
         return await apiPatch(
-            `api/boards/${payload.boardId}/statuses/${payload.id}`,
+            `api/boards/${payload.boardId}/statuses/${payload.statusId}`,
             payload.title
         );
     },
