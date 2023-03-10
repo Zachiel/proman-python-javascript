@@ -19,7 +19,7 @@
         <label for="username" class="form-label">
             Username*:
         </label>
-        <input id="username" type="text" name="username" minlength="3" class="form-control" required
+        <input id="username" type="text" name="username" autocomplete='username' minlength="3" class="form-control" required
                pattern="^[a-zA-Z0-9]*$"
                oninvalid="this.setCustomValidity('Provide an username that is at least 3 characters long'+
                                ' and contains only letters and numbers')"
@@ -35,7 +35,7 @@
         <label for="password" class="form-label">
             Password*:
         </label>
-        <input id="registration-password" type="password" name="password" minlength="8" class="form-control" required
+        <input id="registration-password" autocomplete="new-password" type="password" name="password" minlength="8" class="form-control" required
                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.{8,}).*$"
                oninvalid="this.setCustomValidity('Provide a password that is at least 8 characters long'+
                                ' and contains:'+

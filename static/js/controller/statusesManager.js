@@ -20,10 +20,21 @@ export let statusesManager = {
             );
             cardsManager.loadCards(boardId, status.id);
         }
+        const addStatusInput = htmlFactory(htmlTemplates.addStatus)(boardId);
+        domManager.addChild(`.board__body[data-board-id="${boardId}"]`, addStatusInput)
+        document.querySelector(`.board__status-input--new[data-board-id="${boardId}"]`).addEventListener('blur', handleAddStatusBlur);
     },
     postStatus: async function (payload) {
         await dataHandler.createNewStatus(payload);
     },
+};
+
+const handleAddStatusBlur = e =>{
+    const newStatus = e.currentTarget.value;
+    if(newStatus !== ""){
+        console.log('That should add a new status: ', newStatus);
+        e.currentTarget.value = "";
+    }
 };
 
 function showHideButtonHandler(clickEvent) {
