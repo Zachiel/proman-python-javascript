@@ -1,7 +1,8 @@
-import { dataHandler } from "../data/dataHandler.js";
-import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
-import { domManager } from "../view/domManager.js";
-import { cardsManager } from "./cardsManager.js";
+import {dataHandler} from "../data/dataHandler.js";
+import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
+import {domManager} from "../view/domManager.js";
+import {cardsManager} from "./cardsManager.js";
+import {showMessage} from "./messages.js";
 
 export let statusesManager = {
     loadStatuses: async function (boardId) {
@@ -9,37 +10,64 @@ export let statusesManager = {
         for (let status of statuses) {
             const statusBuilder = htmlFactory(htmlTemplates.status);
             const content = statusBuilder(status, boardId);
-            domManager.addChild(
-                `.board__body[data-board-id="${boardId}"]`,
-                content
-            );
-            domManager.addEventListener(
-                `input[data-status-id="${status.id}"]`,
-                "change",
-                updateHandler
-            );
+            domManager.addChild(`.board__body[data-board-id="${boardId}"]`, content);
+            domManager.addEventListener(`input[data-status-id="${status.id}"]`, "change", updateHandler);
             cardsManager.loadCards(boardId, status.id);
         }
         const addStatusInput = htmlFactory(htmlTemplates.addStatus)(boardId);
         domManager.addChild(`.board__body[data-board-id="${boardId}"]`, addStatusInput)
         const addStatusDOMElem = document.querySelector(`.board__status-input--new[data-board-id="${boardId}"]`);
-            addStatusDOMElem.addEventListener('blur', handleAddStatus);
-            addStatusDOMElem.addEventListener('keydown', handleAddStatus);
-    },
-    postStatus: async function (payload) {
-        await dataHandler.createNewStatus(payload);
+        addStatusDOMElem.addEventListener('blur', handleAddStatus);
+        addStatusDOMElem.addEventListener('keydown', handleAddStatus);
+    }, postStatus: async function (payload) {
+        return await dataHandler.createNewStatus(payload);
     },
 };
 
-const handleAddStatus = e =>{
-    const boardId= e.currentTarget.dataset['boardId'];
-    const newStatus = e.currentTarget.value;
-    if(newStatus !== ""){
-        if(e.type !=='keydown' || e.key === 'Enter') {
-            console.log('That should add a new status: ', newStatus, ' in board: ', boardId);
-            e.currentTarget.value = "";
+const handleAddStatus = async e => {
+    const boardId = e.currentTarget.dataset['boardId'];
+    const inputNode = document.querySelector(`input.board__status-input--new[data-board-id="${boardId}"]`)
+    const newStatusTitle = inputNode.value;
+    if (newStatusTitle !== "") {
+        if (e.type !== 'keydown' || e.key === 'Enter') {
+            inputNode.value = "";
+            inputNode.toggleAttribute('disabled');
+            const statusObject = await createTemporaryStatus(boardId, newStatusTitle, inputNode.parentNode.parentNode);
+            try {
+                await addStatusToDB(statusObject, newStatusTitle, boardId);
+            } catch (error) {
+                handleAddStatusToDBError(error, statusObject);
+            }
+            inputNode.toggleAttribute('disabled');
         }
     }
+};
+
+const handleAddStatusToDBError = (error, statusObject) => {
+    showMessage('There was an error: ' + error.toString(), error);
+    statusObject.renderedCardContainer.parentNode.parentNode.removeChild(statusObject.renderedCardContainer.parentNode);
+}
+
+const addStatusToDB = async (statusObject, newStatusTitle, boardId) => {
+    const statusResponse = await statusesManager.postStatus({title: newStatusTitle, boardId: boardId});
+    for (let key in statusObject) {
+        statusObject[key].dataset.statusId = statusResponse.id;
+    }
+    statusObject.renderedInput.toggleAttribute('disabled');
+    statusObject.renderedInput.addEventListener("change", updateHandler);
+}
+
+const createTemporaryStatus = async (boardId, title, lastElem) => {
+    const temporaryStatusID = `B-${boardId}-newStatus`;
+    const statusBuilder = htmlFactory(htmlTemplates.status);
+    const content = statusBuilder({'title': title, 'id': temporaryStatusID, 'board_id': boardId});
+    lastElem.insertAdjacentHTML('beforebegin', content);
+    const statusObject = {
+        renderedInput: document.querySelector(`input[data-status-id=${temporaryStatusID}]`),
+        renderedCardContainer: document.querySelector(`div[data-status-id=${temporaryStatusID}]`),
+    }
+    statusObject.renderedInput.toggleAttribute('disabled');
+    return statusObject;
 };
 
 function showHideButtonHandler(clickEvent) {
@@ -52,15 +80,11 @@ function updateHandler() {
     let boardId = parseInt(this.dataset.boardId);
     if (statusId <= 4) {
         statusesManager.postStatus({
-            title: this.value,
-            boardId: boardId,
-            statusId: statusId,
+            title: this.value, boardId: boardId, statusId: statusId,
         });
     } else {
         dataHandler.updateStatus({
-            title: this.value,
-            boardId: boardId,
-            statusId: statusId,
+            title: this.value, boardId: boardId, statusId: statusId,
         });
     }
 }

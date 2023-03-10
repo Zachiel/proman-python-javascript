@@ -37,7 +37,6 @@ def get_board_statuses(board_id: int) -> Any:
 
 def post_status(board_id: int, title: str) -> Any:
 
-
     query_statuses: str = """
     INSERT INTO statuses (title)
     VALUES(
@@ -58,6 +57,7 @@ def post_status(board_id: int, title: str) -> Any:
     status: Any = data_manager.execute_insert(query_statuses, {"title": title}, True)
     data_manager.execute_insert(query_board_statuses,
         {"status_id": status["id"], "board_id": board_id})
+    return status
 
 
 def patch_status(status_id: int, data: dict[str, Any]) -> None:

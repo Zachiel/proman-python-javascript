@@ -401,8 +401,9 @@ def statuses_public_board(board_id: int) -> ResponseReturnValue | None:
 
     if request.method == "POST":
         data: Any = request.json
-        dh.status.post_status(board_id, data["title"])
+        result: Any = dh.status.post_status(board_id, data["title"])
         flash(f"status {data['title']} created succesfuly!", "message")
+        return result
     else:
         return dh.status.get_board_statuses(board_id)
 
