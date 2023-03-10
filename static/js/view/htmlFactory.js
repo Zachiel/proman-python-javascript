@@ -2,12 +2,14 @@ export const htmlTemplates = {
     board: 1,
     status: 2,
     card: 3,
+    addStatus: 4,
 };
 
 export const builderFunctions = {
     [htmlTemplates.board]: boardBuilder,
     [htmlTemplates.status]: statusBuilder,
     [htmlTemplates.card]: cardBuilder,
+    [htmlTemplates.addStatus]: addStatusBuilder,
 };
 
 export function htmlFactory(template) {
@@ -20,6 +22,18 @@ export function htmlFactory(template) {
     return () => {
         return "";
     };
+}
+
+function addStatusBuilder(boardId){
+    return `<div class="col-12 col-sm-6 col-md-4 col-lg-3 board__status-column flex-column">
+                <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+                    <input
+                        class="board__status-input board__status-input--new"
+                        placeholder="New Column"
+                        data-board-id='${boardId}'
+                    />
+                </h4>
+            </div>`;
 }
 
 function boardBuilder(board) {
