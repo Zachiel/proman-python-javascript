@@ -22,18 +22,23 @@ export let statusesManager = {
         }
         const addStatusInput = htmlFactory(htmlTemplates.addStatus)(boardId);
         domManager.addChild(`.board__body[data-board-id="${boardId}"]`, addStatusInput)
-        document.querySelector(`.board__status-input--new[data-board-id="${boardId}"]`).addEventListener('blur', handleAddStatusBlur);
+        const addStatusDOMElem = document.querySelector(`.board__status-input--new[data-board-id="${boardId}"]`);
+            addStatusDOMElem.addEventListener('blur', handleAddStatus);
+            addStatusDOMElem.addEventListener('keydown', handleAddStatus);
     },
     postStatus: async function (payload) {
         await dataHandler.createNewStatus(payload);
     },
 };
 
-const handleAddStatusBlur = e =>{
+const handleAddStatus = e =>{
+    const boardId= e.currentTarget.dataset['boardId'];
     const newStatus = e.currentTarget.value;
     if(newStatus !== ""){
-        console.log('That should add a new status: ', newStatus);
-        e.currentTarget.value = "";
+        if(e.type !=='keydown' || e.key === 'Enter') {
+            console.log('That should add a new status: ', newStatus, ' in board: ', boardId);
+            e.currentTarget.value = "";
+        }
     }
 };
 
