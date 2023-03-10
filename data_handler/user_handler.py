@@ -15,6 +15,18 @@ VALIDATION_REGEXS: dict[str] = {'password': r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])
 
 
 def validate_registration_data(user: dict[Any]) -> dict[str | bool, str]:
+    """Check if the provided registration data fulfill registration criteria.
+
+    Parameters
+    ----------
+    user : dict[Any]
+        dictionary containing registration information
+
+    Returns
+    -------
+    Any
+        JSON object
+    """
     response: dict[str | bool, str] = {'success': True, 'message': ''}
     # Check if user already exists
     if len(get_user_by_email(user['email'])) != 0:
@@ -38,6 +50,18 @@ def validate_registration_data(user: dict[Any]) -> dict[str | bool, str]:
 
 
 def register_new_user(user: dict[Any]) -> dict[str | bool, str]:
+    """Register new user if provided data is correct.
+
+    Parameters
+    ----------
+    user : dict[Any]
+        dictionary containing registration information
+
+    Returns
+    -------
+    Any
+        JSON object
+    """
     response: dict[str | bool, str] = validate_registration_data(user)
     if response['success']:
         user['password'] = bcrypt.hashpw(user['password'].encode('UTF-8'), bcrypt.gensalt()).decode()
@@ -58,7 +82,19 @@ def register_new_user(user: dict[Any]) -> dict[str | bool, str]:
     return response
 
 
-def validate_login(login_data):
+def validate_login(login_data: dict[str]):
+    """Validate login information.
+
+    Parameters
+    ----------
+    login_data : dict[str]
+        dictionary containing login information
+
+    Returns
+    -------
+    Any
+        JSON object
+    """
     email = login_data['email']
     print(email)
     password = login_data['password'].encode('UTF-8')

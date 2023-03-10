@@ -73,6 +73,17 @@ def registration() -> Any:
     methods=["POST"])
 @json_response
 def login() -> ResponseReturnValue:
+    """Route for logging in a user and creating session.
+
+    Methods
+    -------
+    post
+
+    Returns
+    -------
+    ResponseReturnValue : dict[bool, str]
+        JSON object
+    """
     response = dh.users.validate_login(request.json)
     if response['success']:
         session['email'] = request.json['email']
