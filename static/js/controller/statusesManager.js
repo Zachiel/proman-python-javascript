@@ -68,11 +68,10 @@ const handleAddStatus = async (e) => {
 };
 
 const handleAddStatusToDBError = (error, statusObject) => {
-    showMessage("There was an error: " + error.toString(), error);
-    statusObject.renderedCardContainer.parentNode.parentNode.removeChild(
-        statusObject.renderedCardContainer.parentNode
-    );
+    showMessage('There was an error: ' + error.toString(), error);
+    statusObject.renderedCardContainer.parentElement.remove();
 };
+
 
 const addStatusToDB = async (statusObject, newStatusTitle, boardId) => {
     const statusResponse = await statusesManager.postStatus({
