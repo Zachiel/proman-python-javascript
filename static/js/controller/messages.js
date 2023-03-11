@@ -1,4 +1,5 @@
 export const showMessage = (message, type = undefined, timeout = 3000) => {
+    const MESSAGE_BOX_ANIMATION_DURATION = 250;
     const body = document.querySelector('body');
     const messageBox = document.createElement('div');
     messageBox.classList.add('message-box');
@@ -16,5 +17,6 @@ export const showMessage = (message, type = undefined, timeout = 3000) => {
     }, 10);
     setTimeout(() => {
         messageBox.classList.remove('message-box--shown');
+        setTimeout(() => messageBox.parentNode.removeChild(messageBox), MESSAGE_BOX_ANIMATION_DURATION+50);
     }, timeout);
 };

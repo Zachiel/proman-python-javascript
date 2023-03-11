@@ -12,7 +12,7 @@ export const usersHandler = {
             email: e.target.email.value,
             password: e.target.password.value,
         }
-        const result = dataHandler.registerUser(JSON.stringify(user));
+        const result = dataHandler.registerUser(user);
 
         result.then(response => showMessage(`${response['message']}`, response['success']?'success':'error'));
     },
@@ -22,8 +22,7 @@ export const usersHandler = {
             email: e.target.email.value,
             password: e.target.password.value,
         }
-        console.log(e.target, '\n', login);
-        const result = dataHandler.loginUser(JSON.stringify(login));
+        const result = dataHandler.loginUser(login);
         result.then(response =>{
                 if (response['success'])
                 {
