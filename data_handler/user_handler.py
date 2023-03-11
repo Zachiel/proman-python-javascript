@@ -96,7 +96,6 @@ def validate_login(login_data: dict[str]):
         JSON object
     """
     email = login_data['email']
-    print(email)
     password = login_data['password'].encode('UTF-8')
     user = get_user_by_email(email)
     if len(user) > 0:
