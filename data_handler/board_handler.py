@@ -129,9 +129,9 @@ def post_public_board(title: str, owner_id: int=0) -> None:
             'owner_id'
         )
         """
-    board_id: Any = data_manager.execute_insert(query_boards, {"title": title}, True)
+    board_id: Any = data_manager.execute_dml(query_boards, {"title": title}, True)
     if owner_id > 0:
-        data_manager.execute_insert(query_user_boards, {"id": board_id,"owner_id": owner_id})
+        data_manager.execute_dml(query_user_boards, {"id": board_id,"owner_id": owner_id})
 
 
 def post_private_board(title: str, owner_id: int) -> None:
@@ -160,13 +160,13 @@ def post_private_board(title: str, owner_id: int) -> None:
             'owner_id'
         )
         """
-    board_id: Any = data_manager.execute_insert(query_boards,
+    board_id: Any = data_manager.execute_dml(query_boards,
         {"title": title}, True)
-    data_manager.execute_insert(query_user_boards,
-        {"id": board_id,"owner_id": owner_id})
+    data_manager.execute_dml(query_user_boards,
+        {"id": board_id['id'],"owner_id": owner_id})
 
 
-def delete_board(board_id: int, user_id: int=0) -> None:
+def delete_board(board_id: int) -> None:
 
 
     query_boards: str = """
@@ -176,16 +176,28 @@ def delete_board(board_id: int, user_id: int=0) -> None:
     query_user_boards: str = """
     DELETE FROM user_boards
     WHERE board_id = %(board_id)s
-    AND user_id = %(user_id)s
     """
+    query_board_statuses: str = """
+    DELETE FROM board_statuses
+    WHERE board_id = %(board_id)s
+    RETURNING status_id"""
+    
+    query_statuses: str = """
+    DELETE FROM statuses
+    WHERE id = %(status_id)s"""
+
     query_cards: str = """
     DELETE FROM cards
     WHERE board_id = %(board_id)s
     """
-    data_manager.execute_other(query_cards, {"board_id": board_id})
-    data_manager.execute_other(query_user_boards,
-        {"board_id": board_id, "user_id": user_id})
-    data_manager.execute_other(query_boards, {"board_id": board_id})
+    data_manager.execute_dml(query_cards, {"board_id": board_id})
+    statuses_to_remove: Any = data_manager.execute_dml(query_board_statuses,
+        {"board_id": board_id}, True)
+    for status in statuses_to_remove:
+        data_manager.execute_dml(query_statuses, {"status_id": status["status_id"]})
+    data_manager.execute_dml(query_user_boards,
+        {"board_id": board_id})
+    data_manager.execute_dml(query_boards, {"board_id": board_id})
 
 
 def patch_board(board_id: int, data: dict[str, Any]) -> None:
@@ -196,4 +208,4 @@ def patch_board(board_id: int, data: dict[str, Any]) -> None:
         SET title = %(title)s, is_private = %(is_private)s
         WHERE id = %(id)s
         """
-    data_manager.execute_other(query, data)
+    data_manager.execute_dml(query, data)

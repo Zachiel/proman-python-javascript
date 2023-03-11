@@ -20,6 +20,11 @@ export let boardsManager = {
                 "change",
                 updateHandler
             );
+            domManager.addEventListener(
+                `button[data-board-id="${board.id}"]`,
+                "click",
+                deleteHandler
+            );
         }
     },
 };
@@ -40,4 +45,9 @@ async function updateHandler() {
         is_private: this.dataset.boardPrivate,
         id: parseInt(this.dataset.boardId),
     });
+}
+
+async function deleteHandler() {
+    await dataHandler.deleteBoard(parseInt(this.dataset.boardId));
+    this.parentElement.remove();
 }

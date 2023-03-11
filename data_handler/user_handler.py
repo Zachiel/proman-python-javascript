@@ -67,7 +67,7 @@ def register_new_user(user: dict[Any]) -> dict[str | bool, str]:
         user['password'] = bcrypt.hashpw(user['password'].encode('UTF-8'), bcrypt.gensalt()).decode()
         user['registration_date'] = datetime.datetime.utcnow()
         try:
-            db_response = data_manager.execute_insert("""
+            db_response = data_manager.execute_dml("""
             INSERT INTO users (username, first_name, last_name, registration_date, password, email) VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING *;""", [user['username'], user['first_name'], user['last_name'], user['registration_date'],
                               user['password'],

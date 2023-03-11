@@ -75,6 +75,10 @@
     padding-bottom: 1rem;
 }
 
+.board__status-column {
+    position: relative;
+}
+
 .board__status-header {
     width: 100%;
     height: 4rem;
@@ -174,5 +178,21 @@
     &--error {
         background-color: lightpink;
         color: darkred;
+    }
+}
+
+.button-delete {
+    border: 2px solid maroon;
+    border-radius: 0.5rem;
+    color: maroon;
+    transition: all 0.5s;
+    position: absolute;
+    right: 0.1rem;
+    top: 0.1rem;
+    transform: scale(0.5);
+    z-index: 10;
+    &:hover {
+        border-color: red;
+        color: red;
     }
 }

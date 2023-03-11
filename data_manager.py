@@ -83,7 +83,7 @@ def execute_select(
     return result_set
 
 
-def execute_insert(statement: str,
+def execute_dml(statement: str,
         variables: dict[str, Any] | list[Any],
         returning: bool=False)\
     -> RealDictRow | None:
@@ -95,9 +95,15 @@ def execute_insert(statement: str,
         SQL query
     variables : dict[str, Any] | list[Any]
         safe query string formatting key: value pairs
-        >>> execute_insert('INSERT INTO shows (title, score)
+        >>> execute_dml('INSERT INTO shows (title, score)
             VALUES (%(title)s, %(score)s)',
             variables={'title': 'Codecool', 'score': 6.9})
+        >>> execute_dml('DELETE FROM shows \\
+            WHERE title = %(title)s',
+            variables={'title': 'Codenormie'})
+        >>> execute_dml('UPDATE shows SET title = %s, \\
+            genre = %s WHERE id = %s',
+            variables=["How to exit vim?", "horror", 2137])
     returning : bool, optional
         if the query has a RETURNING statement set to `True`,
         by default False
@@ -115,26 +121,3 @@ def execute_insert(statement: str,
             result = cursor.fetchone() if returning else None
 
     return result
-
-
-def execute_other(statement: str,
-        variables: dict[str, Any] | list[Any]) -> None:
-    """Execute DELETE or PATCH sql statement.
-
-    Parameters
-    ----------
-    statement : str
-        SQL query
-    variables : dict[str, Any] | list[Any]
-        data used in safe query string formatting
-        >>> execute_other('DELETE FROM shows \\
-            WHERE title = %(title)s',
-            variables={'title': 'Codenormie'})
-        >>> execute_other('UPDATE shows SET title = %s, \\
-            genre = %s WHERE id = %s',
-            variables=["How to exit vim?", "horror", 2137])
-    """
-
-    with establish_connection() as conn:
-        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-            cursor.execute(statement, variables)

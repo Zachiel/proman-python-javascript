@@ -132,7 +132,7 @@ def delete_card(card_id: int) -> None:
     DELETE FROM cards
     WHERE card_id = %(id)s
     """
-    data_manager.execute_other(query, {"id": card_id})
+    data_manager.execute_dml(query, {"id": card_id})
 
 
 def patch_card(card_id: int, data: dict[str, Any]) -> None:
@@ -145,7 +145,7 @@ def patch_card(card_id: int, data: dict[str, Any]) -> None:
     WHERE id = %(id)s
     """
     data.update({"id": card_id})
-    data_manager.execute_other(query, data)
+    data_manager.execute_dml(query, data)
 
 
 def post_card(board_id: int, status_id: int, title: str) -> None:
@@ -161,5 +161,5 @@ def post_card(board_id: int, status_id: int, title: str) -> None:
                 WHERE board_id = %(board_id)s)
         )
         """
-    data_manager.execute_insert(query_cards,
+    data_manager.execute_dml(query_cards,
         [board_id, status_id, title], True)
