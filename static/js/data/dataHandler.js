@@ -11,6 +11,9 @@ export let dataHandler = {
     updateBoard: async function (payload) {
         return await apiPatch(`/api/boards/${payload.id}`, payload);
     },
+    deleteBoard: async function (boardId) {
+        return await apiDelete(`/api/boards/${boardId}`);
+    },
     getStatusesByBoardId: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/statuses`);
     },
@@ -26,6 +29,9 @@ export let dataHandler = {
             { title: payload.title }
         );
     },
+    deleteStatus: async function (boardId, statusId) {
+        return await apiDelete(`/api/boards/${boardId}/statuses/${statusId}`);
+    },
     getCardsByBoardId: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/cards`);
     },
@@ -37,6 +43,9 @@ export let dataHandler = {
     },
     updateCard: async function (boardId, cardId, payload) {
         return await apiPatch(`api/boards/${boardId}/cards/${cardId}`, payload);
+    },
+    deleteCard: async function (boardId, cardId) {
+        return await apiDelete(`api/boards/${boardId}/cards/${cardId}`);
     },
     registerUser: async function (userJSON) {
         return await apiPost("/register", userJSON);
@@ -69,7 +78,19 @@ async function apiPost(url, payload) {
     }
 }
 
-async function apiDelete(url) {}
+async function apiDelete(url) {
+    let response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        // body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+        return await response.json();
+        ``;
+    }
+}
 
 // async function apiPut(url) {}
 

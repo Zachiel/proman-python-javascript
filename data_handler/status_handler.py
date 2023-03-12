@@ -54,8 +54,8 @@ def post_status(board_id: int, title: str) -> Any:
             WHERE board_id = %(board_id)s)
     )
     """
-    status: Any = data_manager.execute_insert(query_statuses, {"title": title}, True)
-    data_manager.execute_insert(query_board_statuses,
+    status: Any = data_manager.execute_dml(query_statuses, {"title": title}, True)
+    data_manager.execute_dml(query_board_statuses,
         {"status_id": status["id"], "board_id": board_id})
     return status
 
@@ -69,7 +69,7 @@ def patch_status(status_id: int, data: dict[str, Any]) -> None:
         WHERE id = %(id)s
         """
     data.update({"id": status_id})
-    data_manager.execute_other(query, data)
+    data_manager.execute_dml(query, data)
 
 
 def delete_status(board_id: int, status_id: int) -> None:
@@ -84,6 +84,11 @@ def delete_status(board_id: int, status_id: int) -> None:
     WHERE status_id = %(status_id)s
     AND board_id = %(board_id)s
     """
-    data_manager.execute_other(query_board_statuses,
+    query_cards: str = """
+    DELETE FROM cards
+    WHERE status_id = %(status_id)s
+    """
+    data_manager.execute_dml(query_cards, {"status_id": status_id})
+    data_manager.execute_dml(query_board_statuses,
         {"status_id": status_id, "board_id": board_id})
-    data_manager.execute_other(query_statuses, {"status_id": status_id})
+    data_manager.execute_dml(query_statuses, {"status_id": status_id})

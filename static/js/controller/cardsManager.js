@@ -26,6 +26,11 @@ export let cardsManager = {
                     "change",
                     updateHandler
                 );
+                domManager.addEventListener(
+                    `button[data-card-id="${card.id}"]`,
+                    "click",
+                    deleteHandler
+                );
             }
         }
     },
@@ -98,3 +103,11 @@ export const cardsModal = () => {
     const boardsAccordion = document.querySelector("#boardsAccordion");
     boardsAccordion.addEventListener("dblclick", cardsModalEvent);
 };
+
+async function deleteHandler() {
+    await dataHandler.deleteCard(
+        parseInt(this.dataset.boardId),
+        parseInt(this.dataset.cardId)
+    );
+    this.parentElement.parentElement.parentElement.remove();
+}
