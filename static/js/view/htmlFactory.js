@@ -38,7 +38,7 @@ function addStatusBuilder(boardId) {
 
 function boardBuilder(board) {
     return `<div class="accordion-item position-relative board">
-                <button class="btn btn-secondary board__add-card-button">+ Add card</button>
+                <button class="btn btn-secondary board__add-card-button" data-board-id="${board.id}">+ Add card</button>
                 <button class="btn btn-danger button-delete" data-board-id="${board.id}"><i class="fa-solid fa-x"></i></button>
                 <h2 class="accordion-header" id="heading${board.id}">
                     <div class="accordion-button align-items-baseline collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${board.id}" aria-expanded="false" aria-controls="collapse${board.id}" data-board-id="${board.id}">
@@ -67,7 +67,7 @@ function statusBuilder(status) {
 }
 
 function cardBuilder(card) {
-    return `<div class="card" data-card-id="${card.id}" data-card-order="${card.order}" data-card-archived="${card.archived}">
+    return `<fieldset class="card" data-card-id="${card.id}" data-card-order="${card.order}" data-card-archived="${card.archived}">
                 <div class="card-body">
                     <h5 class="card-title">
                         <input type="text" class="board__card-title" value="${card.title}" data-card-id="${card.id}" data-board-id="${card.board_id}" data-status-id="${card.status_id}" data-card-order="${card.order}" data-card-archived="${card.archived}"/>
@@ -75,5 +75,5 @@ function cardBuilder(card) {
                     </h5>
                     <textarea class="card-text board__card-text">${card.body}</textarea>
                 </div>
-            </div>`;
+            </fieldset>`;
 }

@@ -158,8 +158,10 @@ def post_card(board_id: int, status_id: int, title: str) -> None:
             (SELECT
                 (MAX(card_order) + 1)
                 FROM cards
-                WHERE board_id = %(board_id)s)
+                WHERE board_id = %s)
         )
+        RETURNING *
         """
-    data_manager.execute_dml(query_cards,
-        [board_id, status_id, title], True)
+    return data_manager.execute_dml(query_cards,
+        [board_id, status_id, title, board_id], 'one')
+

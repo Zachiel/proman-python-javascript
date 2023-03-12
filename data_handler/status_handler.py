@@ -54,7 +54,7 @@ def post_status(board_id: int, title: str) -> Any:
             WHERE board_id = %(board_id)s)
     )
     """
-    status: Any = data_manager.execute_dml(query_statuses, {"title": title}, True)
+    status: Any = data_manager.execute_dml(query_statuses, {"title": title}, 'one')
     data_manager.execute_dml(query_board_statuses,
         {"status_id": status["id"], "board_id": board_id})
     return status

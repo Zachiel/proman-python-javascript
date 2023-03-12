@@ -3,7 +3,7 @@ import {dataHandler} from "../data/dataHandler.js";
 import {showMessage} from './messages.js';
 
 export const usersHandler = {
-    register_event: (e) => {
+    registerEvent: (e) => {
         e.preventDefault();
         const user = {
             username: e.target.username.value,
@@ -16,7 +16,7 @@ export const usersHandler = {
 
         result.then(response => showMessage(`${response['message']}`, response['success']?'success':'error'));
     },
-    login_event: (e) =>{
+    loginEvent: (e) =>{
         e.preventDefault();
         const login = {
             email: e.target.email.value,
@@ -35,7 +35,7 @@ export const usersHandler = {
             }
         )
     },
-    account_event: e=> {
+    checkAccountEvent: e=> {
         showMessage(`You're logged in as: ${e.currentTarget.dataset.username}`);
     }
 }

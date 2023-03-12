@@ -2,6 +2,7 @@ import { dataHandler } from "../data/dataHandler.js";
 import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
 import { domManager } from "../view/domManager.js";
 import { statusesManager } from "./statusesManager.js";
+import {cardsManager} from "./cardsManager.js";
 
 export let boardsManager = {
     loadBoards: async function () {
@@ -16,12 +17,17 @@ export let boardsManager = {
                 showHideButtonHandler
             );
             domManager.addEventListener(
+                `.board__add-card-button[data-board-id="${board.id}"]`,
+                "click",
+                cardsManager.addCardEvent
+                )
+            domManager.addEventListener(
                 `input[data-board-id="${board.id}"]`,
                 "change",
                 updateHandler
             );
             domManager.addEventListener(
-                `button[data-board-id="${board.id}"]`,
+                `.button-delete[data-board-id="${board.id}"]`,
                 "click",
                 deleteHandler
             );
