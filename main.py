@@ -272,8 +272,11 @@ def cards_public_board(board_id: int) -> ResponseReturnValue | None:
 
     if request.method == "POST":
         data: Any = request.json
-        dh.cards.post_card(board_id, data["status_id"], data["title"])
-        flash(f"card {data['title']} created succesfuly!", "message")
+        card = dh.cards.post_card(board_id, data["status_id"], data["title"])
+        if card:
+            return {'success': True, 'card': card}
+        else:
+            return {'success': False, 'message': "Couldn't add the card"}
     else:
         return dh.cards.get_all_cards_public_board(board_id)
 
