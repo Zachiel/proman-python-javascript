@@ -27,7 +27,7 @@ export let boardsManager = {
                 updateHandler
             );
             domManager.addEventListener(
-                `button[data-board-id="${board.id}"]`,
+                `.button-delete[data-board-id="${board.id}"]`,
                 "click",
                 deleteHandler
             );

@@ -72,7 +72,7 @@ def register_new_user(user: dict[Any]) -> dict[str | bool, str]:
             RETURNING *;""", [user['username'], user['first_name'], user['last_name'], user['registration_date'],
                               user['password'],
                               user['email']],
-                                                      True)
+                                                   'one')
             if db_response is None:
                 response['success'] = False
                 response['message'] = 'An error occured during communication with the database: ' + db_response

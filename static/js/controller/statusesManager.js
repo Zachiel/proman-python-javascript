@@ -20,7 +20,7 @@ export let statusesManager = {
                 updateHandler
             );
             domManager.addEventListener(
-                `button[data-status-id="${status.id}"]`,
+                `.button-delete[data-status-id="${status.id}"]`,
                 "click",
                 deleteHandler
             );

@@ -163,5 +163,5 @@ def post_card(board_id: int, status_id: int, title: str) -> None:
         RETURNING *
         """
     return data_manager.execute_dml(query_cards,
-        [board_id, status_id, title, board_id], True)
+        [board_id, status_id, title, board_id], 'one')
 

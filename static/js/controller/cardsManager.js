@@ -25,7 +25,7 @@ export let cardsManager = {
                     updateHandler
                 );
                 domManager.addEventListener(
-                    `button[data-card-id="${card.id}"]`,
+                    `.button-delete[data-card-id="${card.id}"]`,
                     "click",
                     deleteHandler
                 );
@@ -89,6 +89,9 @@ const updateDOMCard = (button, cardDOMNode, addCardResponse) => {
     const cardInputNode = cardDOMNode.querySelector('input');
     cardInputNode.dataset.cardId = addCardResponse['card']['id'];
     cardInputNode.dataset.cardOrder = addCardResponse['card']['card_order'];
+    const deleteButton = cardDOMNode.querySelector('.button-delete');
+    deleteButton.dataset.cardId = addCardResponse['card']['id'];
+    deleteButton.addEventListener('click', deleteHandler);
 }
 
 const addCardToDB = async (card) => {
@@ -136,9 +139,6 @@ const getWholeCardElement = (element) => {
         return false;
     }
 };
-
-function deleteButtonHandler(clickEvent) {
-}
 
 function updateHandler() {
     let boardId = parseInt(this.dataset.boardId);
