@@ -32,20 +32,32 @@ export let cardsManager = {
             }
         }
     }, addCardEvent: (e) => {
-        const board = e.currentTarget.parentNode;
-        console.log('Board: ', board);
+        const button = e.currentTarget;
+        button.toggleAttribute('disabled');
+        const board = button.parentNode;
         const boardId = board.querySelector('.board__title-input').dataset.boardId;
-        console.log('Board id: ', boardId);
         const firstStatus = board.querySelector('.board__card-container');
-        console.log('First status: ', firstStatus);
         if (firstStatus) {
             const firstStatusId = firstStatus.dataset.statusId;
-            const card = {'title': 'New card', 'status_id': firstStatusId, 'body': "", 'order': getLastCardOrder + 1, 'board_id':boardId};
+            const card = {
+                'title': 'New card',
+                'status_id': firstStatusId,
+                'body': "",
+                'order': getLastCardOrder + 1,
+                'board_id': boardId
+            };
+
             const cardHMTLContent = htmlFactory(htmlTemplates.card)(card);
             firstStatus.insertAdjacentHTML('beforeend', cardHMTLContent);
-        }
-        else{
+            const cardDOMNode = firstStatus.querySelector('.card:last-child');
+            cardDOMNode.toggleAttribute('disabled');
+            setTimeout(() => {
+                cardDOMNode.toggleAttribute('disabled');
+                button.toggleAttribute('disabled')
+            }, 1000);
+        } else {
             showMessage('There must be at least one status to add a card');
+            button.toggleAttribute('disabled');
         }
     },
 };
@@ -95,14 +107,16 @@ export const cardsModal = () => {
         const targetElement = e.target;
         if (checkIfElementIsCard(targetElement)) {
             const card = getWholeCardElement(targetElement);
-            if (card) {
-                const cardTitle = card.querySelector(".board__card-title").value;
-                const cardText = card.querySelector(".board__card-text").value;
-                const modalElement = document.querySelector("#card-modal");
-                document.querySelector("#card-modal__input").value = cardTitle;
-                document.querySelector("#card-modal__textarea").value = cardText;
-                const myModal = new bootstrap.Modal(modalElement).show();
-            } else {
+            if (card)
+                if (!card.hasAttribute('disabled')) {
+                    const cardTitle = card.querySelector(".board__card-title").value;
+                    const cardText = card.querySelector(".board__card-text").value;
+                    const modalElement = document.querySelector("#card-modal");
+                    document.querySelector("#card-modal__input").value = cardTitle;
+                    document.querySelector("#card-modal__textarea").value = cardText;
+                    const myModal = new bootstrap.Modal(modalElement).show();
+                } else { }
+            else {
                 console.log("Couldn't get the card for DOM element: ", targetElement);
             }
         }

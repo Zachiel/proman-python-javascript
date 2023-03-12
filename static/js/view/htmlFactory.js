@@ -67,7 +67,7 @@ function statusBuilder(status) {
 }
 
 function cardBuilder(card) {
-    return `<div class="card" data-card-id="${card.id}" data-card-order="${card.order}" data-card-archived="${card.archived}">
+    return `<fieldset class="card" data-card-id="${card.id}" data-card-order="${card.order}" data-card-archived="${card.archived}">
                 <div class="card-body">
                     <h5 class="card-title">
                         <input type="text" class="board__card-title" value="${card.title}" data-card-id="${card.id}" data-board-id="${card.board_id}" data-status-id="${card.status_id}" data-card-order="${card.order}" data-card-archived="${card.archived}"/>
@@ -75,5 +75,5 @@ function cardBuilder(card) {
                     </h5>
                     <textarea class="card-text board__card-text">${card.body}</textarea>
                 </div>
-            </div>`;
+            </fieldset>`;
 }
