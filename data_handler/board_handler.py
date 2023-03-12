@@ -171,7 +171,7 @@ def delete_board(board_id: int) -> None:
 
     query_boards: str = """
     DELETE FROM boards
-    WHERE board_id = %(board_id)s
+    WHERE id = %(board_id)s
     """
     query_user_boards: str = """
     DELETE FROM user_boards
@@ -192,9 +192,10 @@ def delete_board(board_id: int) -> None:
     """
     data_manager.execute_dml(query_cards, {"board_id": board_id})
     statuses_to_remove: Any = data_manager.execute_dml(query_board_statuses,
-        {"board_id": board_id}, True)
+        {"board_id": board_id}, "All")
+    print(statuses_to_remove, file=sys.stderr)
     for status in statuses_to_remove:
-        data_manager.execute_dml(query_statuses, {"status_id": status["status_id"]})
+        data_manager.execute_dml(query_statuses, {"status_id": int(status["status_id"])})
     data_manager.execute_dml(query_user_boards,
         {"board_id": board_id})
     data_manager.execute_dml(query_boards, {"board_id": board_id})

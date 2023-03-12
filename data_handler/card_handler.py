@@ -130,7 +130,7 @@ def delete_card(card_id: int) -> None:
 
     query: str = """
     DELETE FROM cards
-    WHERE card_id = %(id)s
+    WHERE id = %(id)s
     """
     data_manager.execute_dml(query, {"id": card_id})
 

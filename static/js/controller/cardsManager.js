@@ -105,6 +105,9 @@ export const cardsModal = () => {
 };
 
 async function deleteHandler() {
-    await dataHandler.deleteBoard(parseInt(this.dataset.cardId));
+    await dataHandler.deleteCard(
+        parseInt(this.dataset.boardId),
+        parseInt(this.dataset.cardId)
+    );
     this.parentElement.parentElement.parentElement.remove();
 }

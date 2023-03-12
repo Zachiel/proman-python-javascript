@@ -44,10 +44,8 @@ export let dataHandler = {
     updateCard: async function (boardId, cardId, payload) {
         return await apiPatch(`api/boards/${boardId}/cards/${cardId}`, payload);
     },
-    deleteCard: async function (boardId, statusId, cardId) {
-        return await apiDelete(
-            `api/boards/${boardId}/statuses/${statusId}/cards/${cardId}`
-        );
+    deleteCard: async function (boardId, cardId) {
+        return await apiDelete(`api/boards/${boardId}/cards/${cardId}`);
     },
     registerUser: async function (userJSON) {
         return await apiPost("/register", userJSON);
@@ -86,7 +84,7 @@ async function apiDelete(url) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        // body: JSON.stringify(payload),
     });
     if (response.ok) {
         return await response.json();

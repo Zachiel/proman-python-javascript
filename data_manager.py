@@ -85,7 +85,7 @@ def execute_select(
 
 def execute_dml(statement: str,
         variables: dict[str, Any] | list[Any],
-        returning: bool=False)\
+        returning: Any = False)\
     -> RealDictRow | None:
     """Execute INSERT sql statement, optionally parameterized.
 
@@ -104,9 +104,11 @@ def execute_dml(statement: str,
         >>> execute_dml('UPDATE shows SET title = %s, \\
             genre = %s WHERE id = %s',
             variables=["How to exit vim?", "horror", 2137])
-    returning : bool, optional
-        if the query has a RETURNING statement set to `True`,
-        by default False
+    returning : Any, optional
+        if the query has a RETURNING statement,
+        set to "All" for multiple results,
+        set to "One" for single result,
+        by default False = no results
 
     Returns
     -------
@@ -118,6 +120,11 @@ def execute_dml(statement: str,
     with establish_connection() as conn:
         with conn.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute(statement, variables)
-            result = cursor.fetchone() if returning else None
-
+            if returning is False:
+                return result
+            else:
+                if returning.casefold() == "all":
+                    result = cursor.fetchall()
+                elif returning.casefold() == "one":
+                    result = cursor.fetchone()
     return result

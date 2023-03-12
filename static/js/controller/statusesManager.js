@@ -131,6 +131,9 @@ function updateHandler() {
 }
 
 async function deleteHandler() {
-    await dataHandler.deleteBoard(parseInt(this.dataset.statusId));
+    await dataHandler.deleteStatus(
+        parseInt(this.dataset.boardId),
+        parseInt(this.dataset.statusId)
+    );
     this.parentElement.parentElement.remove();
 }
