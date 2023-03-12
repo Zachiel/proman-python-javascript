@@ -37,8 +37,8 @@ def index() -> str:
     """
     user = None
     logged_in = False
-    if 'email' in session:
-        user = dh.users.get_user_by_email(session['email'])
+    if 'username' in session:
+        user = dh.users.get_user_by_username(session['username'])
         if len(user) == 1:
             user = user[0]
             logged_in = True
@@ -86,7 +86,7 @@ def login() -> ResponseReturnValue:
     """
     response = dh.users.validate_login(request.json)
     if response['success']:
-        session['email'] = request.json['email']
+        session['username'] = request.json['username']
     return response
 
 
@@ -105,7 +105,7 @@ def logout() -> ResponseReturnValue:
         redirection to home page
     """
 
-    session.pop('email', None)
+    session.pop('username', None)
     return redirect(url_for("index"))
 
 
@@ -165,7 +165,7 @@ def public_board(board_id: int) -> ResponseReturnValue | None:
         flashed message
     """
     if request.method != "GET":
-        user: str = session.get("user", default='')
+        user: str = session.get("username", default='')
         is_allowed: bool = dh.users.check_permission(user, board_id)
         if request.method == "PATCH" and is_allowed:
             data: Any = request.json
@@ -235,7 +235,7 @@ def user_public_board(user_id: int, board_id: int) -> ResponseReturnValue | None
     """
 
     if request.method != "GET":
-        user: str = session.get("user", default='')
+        user: str = session.get("username", default='')
         is_allowed: bool = dh.users.check_permission(user, board_id)
         if request.method == "PATCH" and is_allowed:
             data: Any = request.json
@@ -305,7 +305,7 @@ def card_public_board(board_id: int, card_id: int) -> ResponseReturnValue | None
     """
 
     if request.method != "GET":
-        user: str = session.get("user", default='')
+        user: str = session.get("username", default='')
         is_allowed: bool = dh.users.check_permission(user, board_id)
         if request.method == "PATCH" and is_allowed:
             data: Any = request.json
@@ -381,7 +381,7 @@ def card_user_public_board(
     """
 
     if request.method != "GET":
-        user: str = session.get("user", default='')
+        user: str = session.get("username", default='')
         is_allowed: bool = dh.users.check_permission(user, board_id)
         if request.method == "PATCH" and is_allowed:
             data: Any = request.json
@@ -416,7 +416,7 @@ def status_public_board(board_id: int, status_id: int
 
 
     if request.method != "GET":
-        user: str = session.get("user", default='')
+        user: str = session.get("username", default='')
         is_allowed: bool = dh.users.check_permission(user, board_id)
         if request.method == "PATCH" and is_allowed:
             data: Any = request.json
@@ -449,7 +449,7 @@ def status_user_public_board(board_id: int, status_id: int
 
 
     if request.method != "GET":
-        user: str = session.get("user", default='')
+        user: str = session.get("username", default='')
         is_allowed: bool = dh.users.check_permission(user, board_id)
         if request.method == "PATCH" and is_allowed:
             data: Any = request.json

@@ -1,6 +1,7 @@
-import { dataHandler } from "../data/dataHandler.js";
-import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
-import { domManager } from "../view/domManager.js";
+import {dataHandler} from "../data/dataHandler.js";
+import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
+import {domManager} from "../view/domManager.js";
+import {showMessage} from "./messages.js";
 
 export let cardsManager = {
     loadCards: async function (boardId, statusId) {
@@ -12,10 +13,7 @@ export let cardsManager = {
                 }
                 const cardBuilder = htmlFactory(htmlTemplates.card);
                 const content = cardBuilder(card);
-                domManager.addChild(
-                    `.board__card-container[data-board-id="${boardId}"][data-status-id="${statusId}"]`,
-                    content
-                );
+                domManager.addChild(`.board__card-container[data-board-id="${boardId}"][data-status-id="${statusId}"]`, content);
                 // domManager.addEventListener(
                 //     `.card[data-card-id="${card.id}"]`,
                 //     "click",
@@ -33,18 +31,32 @@ export let cardsManager = {
                 );
             }
         }
+    }, addCardEvent: (e) => {
+        const board = e.currentTarget.parentNode;
+        console.log('Board: ', board);
+        const boardId = board.querySelector('.board__title-input').dataset.boardId;
+        console.log('Board id: ', boardId);
+        const firstStatus = board.querySelector('.board__card-container');
+        console.log('First status: ', firstStatus);
+        if (firstStatus) {
+            const firstStatusId = firstStatus.dataset.statusId;
+            const card = {'title': 'New card', 'status_id': firstStatusId, 'body': "", 'order': getLastCardOrder + 1, 'board_id':boardId};
+            const cardHMTLContent = htmlFactory(htmlTemplates.card)(card);
+            firstStatus.insertAdjacentHTML('beforeend', cardHMTLContent);
+        }
+        else{
+            showMessage('There must be at least one status to add a card');
+        }
     },
 };
 
+const getLastCardOrder = () => {
+    return -1;
+}
+
 const checkIfElementIsCard = (element) => {
     let result = false;
-    const cardElemsClasses = [
-        "card",
-        "card-body",
-        "card-title",
-        "board__card-title",
-        "board__card-text",
-    ];
+    const cardElemsClasses = ["card", "card-body", "card-title", "board__card-title", "board__card-text",];
     cardElemsClasses.forEach((className) => {
         if (element.classList.contains(className)) {
             result = true;
@@ -67,14 +79,14 @@ const getWholeCardElement = (element) => {
     }
 };
 
-function deleteButtonHandler(clickEvent) {}
+function deleteButtonHandler(clickEvent) {
+}
 
 function updateHandler() {
     let boardId = parseInt(this.dataset.boardId);
     let cardId = parseInt(this.dataset.cardId);
     dataHandler.updateCard(boardId, cardId, {
-        title: this.value,
-        body: this.parentElement.nextElementSibling.value,
+        title: this.value, body: this.parentElement.nextElementSibling.value,
     });
 }
 
@@ -84,19 +96,14 @@ export const cardsModal = () => {
         if (checkIfElementIsCard(targetElement)) {
             const card = getWholeCardElement(targetElement);
             if (card) {
-                const cardTitle =
-                    card.querySelector(".board__card-title").value;
+                const cardTitle = card.querySelector(".board__card-title").value;
                 const cardText = card.querySelector(".board__card-text").value;
                 const modalElement = document.querySelector("#card-modal");
                 document.querySelector("#card-modal__input").value = cardTitle;
-                document.querySelector("#card-modal__textarea").value =
-                    cardText;
+                document.querySelector("#card-modal__textarea").value = cardText;
                 const myModal = new bootstrap.Modal(modalElement).show();
             } else {
-                console.log(
-                    "Couldn't get the card for DOM element: ",
-                    targetElement
-                );
+                console.log("Couldn't get the card for DOM element: ", targetElement);
             }
         }
     };

@@ -7,11 +7,11 @@ import {cardsManager} from "./controller/cardsManager.js";
 function init() {
     boardsManager.loadBoards();
     cardsModal();
-    document.querySelector('#registration-form').addEventListener('submit', usersHandler.register_event);
-    document.querySelector('#login-form').addEventListener('submit', usersHandler.login_event);
+    document.querySelector('#registration-form').addEventListener('submit', usersHandler.registerEvent);
+    document.querySelector('#login-form').addEventListener('submit', usersHandler.loginEvent);
     const accountButton = document.querySelector('.header__button--account');
     if (accountButton) {
-        accountButton.addEventListener('click', usersHandler.account_event);
+        accountButton.addEventListener('click', usersHandler.checkAccountEvent);
     }
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));

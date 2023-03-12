@@ -38,7 +38,7 @@ function addStatusBuilder(boardId) {
 
 function boardBuilder(board) {
     return `<div class="accordion-item position-relative board">
-                <button class="btn btn-secondary board__add-card-button">+ Add card</button>
+                <button class="btn btn-secondary board__add-card-button" data-board-id="${board.id}">+ Add card</button>
                 <button class="btn btn-danger button-delete" data-board-id="${board.id}"><i class="fa-solid fa-x"></i></button>
                 <h2 class="accordion-header" id="heading${board.id}">
                     <div class="accordion-button align-items-baseline collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${board.id}" aria-expanded="false" aria-controls="collapse${board.id}" data-board-id="${board.id}">
