@@ -71,6 +71,7 @@
 .board__body {
   flex-wrap: nowrap;
   overflow-x: auto;
+  gap: 20px;
 }
 
 .board__card-container {
@@ -85,6 +86,8 @@
 
 .board__status-column {
   position: relative;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .board__status-header {
@@ -190,7 +193,7 @@
   color: red;
 }
 
-fieldset {
-  padding: 10px;
-  background-color: green !important;
+.status-draggable,
+.card-draggable {
+  cursor: move;
 }/*# sourceMappingURL=main.css.map */
