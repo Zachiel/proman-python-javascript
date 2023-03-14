@@ -30,6 +30,9 @@ function cardDragStart(event) {
     draggableStatuses.forEach((status) => {
         status.removeEventListener("dragstart", statusDragStart);
     });
+    droppableBoards.forEach((board) => {
+        board.removeEventListener("dragover", statusDragOver);
+    });
     this.addEventListener("dragend", cardDragEnd);
 }
 
@@ -37,6 +40,9 @@ function cardDragEnd(event) {
     this.classList.remove("card-dragging");
     draggableStatuses.forEach((status) => {
         status.addEventListener("dragstart", statusDragStart);
+    });
+    droppableBoards.forEach((board) => {
+        board.addEventListener("dragover", statusDragOver);
     });
 }
 function statusDragStart(event) {
@@ -51,13 +57,16 @@ function statusDragEnd(event) {
 function statusDragOver(event) {
     event.preventDefault();
     const draggable = document.querySelector(".status-dragging");
+    const newColumn = document.querySelector(
+        `.status-droppable[data-board-id="${draggable.dataset.boardId}"] .board__status-column:not(.status-draggable)`
+    );
     if (
         draggable &&
         droppableBoards.includes(event.target) &&
         draggable.dataset.boardId == event.target.dataset.boardId
     ) {
         event.target.appendChild(draggable);
-        console.log(event);
+        event.target.appendChild(newColumn);
     }
 }
 
