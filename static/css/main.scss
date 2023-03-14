@@ -70,10 +70,11 @@
 .board__card-container {
     width: 100%;
     height: fit-content;
+    min-height: 10rem;
     border-top: solid 1px black;
     gap: 1rem;
     padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-bottom: 3rem;
 }
 
 .board__status-column {
@@ -202,4 +203,13 @@
 .status-draggable,
 .card-draggable {
     cursor: move;
+}
+
+.card-dragging,
+.status-dragging {
+    border: 2px dashed black;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.6);
+    transform: rotate(5deg);
+    opacity: 0.5;
+    transition: opacity 100ms;
 }
