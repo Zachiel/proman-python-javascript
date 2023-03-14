@@ -56,7 +56,7 @@ function boardBuilder(board) {
 }
 
 function statusBuilder(status) {
-    return `<div class="col-12 col-sm-6 col-md-4 col-lg-3 board__status-column flex-column card-droppable status-draggable" data-status-id="${status.id}" data-status-order="${status.status_order}" data-board-id="${status.board_id}" draggable>
+    return `<div class="col-12 col-sm-6 col-md-4 col-lg-3 board__status-column flex-column card-droppable status-draggable" data-status-id="${status.id}" data-status-order="${status.status_order}" data-board-id="${status.board_id}" draggable="true">
                 <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
                     <input class="board__status-input" value="${status.title}" data-status-id="${status.id}" data-board-id="${status.board_id}"/>
                     <button class="btn btn-danger button-delete" data-board-id="${status.board_id}" data-status-id="${status.id}"><i class="fa-solid fa-x"></i></button>
@@ -67,7 +67,7 @@ function statusBuilder(status) {
 }
 
 function cardBuilder(card) {
-    return `<fieldset class="card card-draggable" data-card-id="${card.id}" data-card-order="${card.card_order}" data-card-archived="${card.archived} draggable">
+    return `<fieldset class="card card-draggable" data-card-id="${card.id}" data-card-order="${card.card_order}" data-card-archived="${card.archived}" draggable="true">
                 <div class="card-body">
                     <h5 class="card-title">
                         <input type="text" class="board__card-title" value="${card.title}" data-card-id="${card.id}" data-board-id="${card.board_id}" data-status-id="${card.status_id}" data-card-order="${card.order}" data-card-archived="${card.archived}"/>
