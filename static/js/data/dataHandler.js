@@ -23,10 +23,10 @@ export let dataHandler = {
     createNewStatus: async function (payload) {
         return await apiPost(`api/boards/${payload.boardId}/statuses`, payload);
     },
-    updateStatus: async function (payload) {
+    updateStatus: async function (boardId, statusId, payload) {
         return await apiPatch(
-            `api/boards/${payload.boardId}/statuses/${payload.statusId}`,
-            { title: payload.title }
+            `api/boards/${boardId}/statuses/${statusId}`,
+            payload
         );
     },
     deleteStatus: async function (boardId, statusId) {

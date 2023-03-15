@@ -24,7 +24,7 @@ export let statusesManager = {
                 "click",
                 deleteHandler
             );
-            cardsManager.loadCards(boardId, status.id);
+            await cardsManager.loadCards(boardId, status.id);
         }
         const addStatusInput = htmlFactory(htmlTemplates.addStatus)(boardId);
         domManager.addChild(
@@ -68,10 +68,9 @@ const handleAddStatus = async (e) => {
 };
 
 const handleAddStatusToDBError = (error, statusObject) => {
-    showMessage('There was an error: ' + error.toString(), error);
+    showMessage("There was an error: " + error.toString(), error);
     statusObject.renderedCardContainer.parentElement.remove();
 };
-
 
 const addStatusToDB = async (statusObject, newStatusTitle, boardId) => {
     const statusResponse = await statusesManager.postStatus({
@@ -121,10 +120,8 @@ function updateHandler() {
             statusId: statusId,
         });
     } else {
-        dataHandler.updateStatus({
+        dataHandler.updateStatus(boardId, statusId, {
             title: this.value,
-            boardId: boardId,
-            statusId: statusId,
         });
     }
 }

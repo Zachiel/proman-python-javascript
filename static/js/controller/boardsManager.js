@@ -2,7 +2,8 @@ import { dataHandler } from "../data/dataHandler.js";
 import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
 import { domManager } from "../view/domManager.js";
 import { statusesManager } from "./statusesManager.js";
-import {cardsManager} from "./cardsManager.js";
+import { cardsManager } from "./cardsManager.js";
+import { dragManager } from "./dragHandler.js";
 
 export let boardsManager = {
     loadBoards: async function () {
@@ -20,7 +21,7 @@ export let boardsManager = {
                 `.board__add-card-button[data-board-id="${board.id}"]`,
                 "click",
                 cardsManager.addCardEvent
-                )
+            );
             domManager.addEventListener(
                 `input[data-board-id="${board.id}"]`,
                 "change",
@@ -41,7 +42,8 @@ async function showHideButtonHandler(clickEvent) {
         `.row.board__body[data-board-id="${boardId}"]`
     );
     if (boardBody.children.length == 0) {
-        statusesManager.loadStatuses(boardId);
+        await statusesManager.loadStatuses(boardId);
+        dragManager.initDragElements();
     }
 }
 

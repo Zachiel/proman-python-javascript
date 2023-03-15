@@ -129,8 +129,8 @@ def delete_card(card_id: int) -> None:
 
 
     query: str = """
-    DELETE FROM cards
-    WHERE id = %(id)s
+        DELETE FROM cards
+        WHERE id = %(id)s
     """
     data_manager.execute_dml(query, {"id": card_id})
 
@@ -139,12 +139,25 @@ def patch_card(card_id: int, data: dict[str, Any]) -> None:
 
 
     query: str = """
-    UPDATE cards 
-    SET title = %(title)s,
-        body = %(body)s
-    WHERE id = %(id)s
+        UPDATE cards 
+        SET title = %(title)s,
+            body = %(body)s
+        WHERE id = %(id)s
     """
     data.update({"id": card_id})
+    data_manager.execute_dml(query, data)
+
+
+def patch_card_order(card_id: int, data: dict[str, Any]) -> None:
+
+
+    query: str = """
+        UPDATE cards
+        SET card_order = %(card_order)s
+            status_id = %(status_id)s
+        WHERE id = %(card_id)s
+    """
+    data.update({"card_id": card_id})
     data_manager.execute_dml(query, data)
 
 
