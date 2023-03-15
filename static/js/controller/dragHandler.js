@@ -44,6 +44,8 @@ function cardDragEnd(event) {
     droppableBoards.forEach((board) => {
         board.addEventListener("dragover", statusDragOver);
     });
+    this.dataset.statusId = this.parentElement.dataset.statusId;
+    fixOrder(this);
 }
 function statusDragStart(event) {
     this.classList.add("status-dragging");
@@ -52,6 +54,7 @@ function statusDragStart(event) {
 
 function statusDragEnd(event) {
     this.classList.remove("status-dragging");
+    fixOrder(this);
 }
 
 function statusDragOver(event) {
@@ -119,6 +122,7 @@ function getDragPreviousCardSibling(container, y) {
         }
     ).element;
 }
+
 function getDragPreviousStatusSibling(container, x) {
     const draggableElements = [
         ...container.querySelectorAll(
@@ -139,4 +143,25 @@ function getDragPreviousStatusSibling(container, x) {
             offset: Number.NEGATIVE_INFINITY,
         }
     ).element;
+}
+
+function fixOrder(element) {
+    const allSiblings = [...element.parentElement.children];
+    for (let i = 1; i <= allSiblings.length; i++) {
+        let currentElement = allSiblings[i - 1].dataset;
+        if ("statusOrder" in currentElement) {
+            if (parseInt(allSiblings[i - 1].dataset.statusOrder) != i) {
+                allSiblings[i - 1].dataset.statusOrder = i;
+                // dataHandler.patchStatusOrder({status_order: i})
+            }
+        } else if ("cardOrder" in currentElement) {
+            if (parseInt(allSiblings[i - 1].dataset.cardOrder) != i) {
+                allSiblings[i - 1].dataset.cardOrder = i;
+                // dataHandler.patchCardOrder({
+                //     status_id: dataSet.statusId,
+                //     card_order: i,
+                // });
+            }
+        }
+    }
 }

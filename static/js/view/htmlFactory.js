@@ -67,7 +67,7 @@ function statusBuilder(status) {
 }
 
 function cardBuilder(card) {
-    return `<fieldset class="card card-draggable" data-card-id="${card.id}" data-card-order="${card.card_order}" data-board-id="${card.board_id}" data-card-archived="${card.archived}" draggable="true">
+    return `<fieldset class="card card-draggable" data-card-id="${card.id}" data-card-order="${card.card_order}" data-board-id="${card.board_id}" data-card-archived="${card.archived}" data-status-id="${card.status_id}" draggable="true">
                 <div class="card-body">
                     <h5 class="card-title">
                         <input type="text" class="board__card-title" value="${card.title}" data-card-id="${card.id}" data-board-id="${card.board_id}" data-status-id="${card.status_id}" data-card-order="${card.order}" data-card-archived="${card.archived}"/>
