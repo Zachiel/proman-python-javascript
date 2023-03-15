@@ -60,11 +60,17 @@ function statusDragOver(event) {
     const newColumn = document.querySelector(
         `.status-droppable[data-board-id="${draggable.dataset.boardId}"] .board__status-column:not(.status-draggable)`
     );
+
     if (
         draggable &&
         droppableBoards.includes(event.target) &&
         draggable.dataset.boardId == event.target.dataset.boardId
     ) {
+        const previousSibling = getDragPreviousStatusSibling(
+            event.target,
+            event.clientX
+        );
+        console.log(previousSibling);
         event.target.appendChild(draggable);
         event.target.appendChild(newColumn);
     }
@@ -73,11 +79,58 @@ function statusDragOver(event) {
 function cardDragOver(event) {
     event.preventDefault();
     const draggable = document.querySelector(".card-dragging");
+
     if (
         draggable &&
         droppableStatuses.includes(event.target) &&
         draggable.dataset.boardId == event.target.dataset.boardId
     ) {
+        const previousSibling = getDragPreviousCardSibling(
+            event.target,
+            event.clientY
+        );
+        console.log(previousSibling);
         event.target.appendChild(draggable);
     }
+}
+
+function getDragPreviousCardSibling(container, y) {
+    const draggableElements = [
+        ...container.querySelectorAll(".card-draggable:not(.card-dragging)"),
+    ];
+    return draggableElements.reduce(
+        (closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        },
+        {
+            offset: Number.NEGATIVE_INFINITY,
+        }
+    ).element;
+}
+function getDragPreviousStatusSibling(container, x) {
+    const draggableElements = [
+        ...container.querySelectorAll(
+            ".status-draggable:not(.status-dragging)"
+        ),
+    ];
+    return draggableElements.reduce(
+        (closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = x - box.left - box.width / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        },
+        {
+            offset: Number.NEGATIVE_INFINITY,
+        }
+    ).element;
 }
