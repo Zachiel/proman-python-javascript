@@ -70,8 +70,11 @@ function statusDragOver(event) {
             event.target,
             event.clientX
         );
-        console.log(previousSibling);
-        event.target.appendChild(draggable);
+        if (previousSibling == null || previousSibling == undefined) {
+            event.target.appendChild(draggable);
+        } else {
+            event.target.insertBefore(draggable, previousSibling);
+        }
         event.target.appendChild(newColumn);
     }
 }
@@ -89,8 +92,11 @@ function cardDragOver(event) {
             event.target,
             event.clientY
         );
-        console.log(previousSibling);
-        event.target.appendChild(draggable);
+        if (previousSibling == null || previousSibling == undefined) {
+            event.target.appendChild(draggable);
+        } else {
+            event.target.insertBefore(draggable, previousSibling);
+        }
     }
 }
 
