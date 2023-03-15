@@ -312,7 +312,10 @@ def card_public_board(board_id: int, card_id: int) -> ResponseReturnValue | None
         is_allowed: bool = dh.users.check_permission(user, board_id)
         if request.method == "PATCH" and is_allowed:
             data: Any = request.json
-            dh.cards.patch_card(card_id, data)
+            if "card_order" in data.keys():
+                dh.cards.patch_card_order(card_id, data)
+            else:
+                dh.cards.patch_card(card_id, data)
         if request.method == "DELETE" and is_allowed:
             dh.cards.delete_card(card_id)
     else:
@@ -423,7 +426,10 @@ def status_public_board(board_id: int, status_id: int
         is_allowed: bool = dh.users.check_permission(user, board_id)
         if request.method == "PATCH" and is_allowed:
             data: Any = request.json
-            dh.status.patch_status(status_id, data)
+            if "status_order" in data.keys():
+                dh.status.patch_status_order(status_id, data)
+            else:
+                dh.status.patch_status(status_id, data)
         if request.method == "DELETE" and is_allowed:
             dh.status.delete_status(board_id, status_id)
     else:

@@ -120,10 +120,8 @@ function updateHandler() {
             statusId: statusId,
         });
     } else {
-        dataHandler.updateStatus({
+        dataHandler.updateStatus(boardId, statusId, {
             title: this.value,
-            boardId: boardId,
-            statusId: statusId,
         });
     }
 }

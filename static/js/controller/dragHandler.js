@@ -147,21 +147,29 @@ function getDragPreviousStatusSibling(container, x) {
 
 function fixOrder(element) {
     const allSiblings = [...element.parentElement.children];
-    for (let i = 1; i <= allSiblings.length; i++) {
-        let currentElement = allSiblings[i - 1].dataset;
-        if ("statusOrder" in currentElement) {
-            if (parseInt(allSiblings[i - 1].dataset.statusOrder) != i) {
-                allSiblings[i - 1].dataset.statusOrder = i;
-                // dataHandler.patchStatusOrder({status_order: i})
+    let i = 1;
+    allSiblings.forEach((element) => {
+        if ("statusOrder" in element.dataset) {
+            if (parseInt(element.dataset.statusOrder) != i) {
+                let boardId = element.dataset.boardId;
+                let statusId = element.dataset.statusId;
+                element.dataset.statusOrder = i;
+                dataHandler.updateStatus(boardId, statusId, {
+                    status_order: i,
+                });
             }
-        } else if ("cardOrder" in currentElement) {
-            if (parseInt(allSiblings[i - 1].dataset.cardOrder) != i) {
-                allSiblings[i - 1].dataset.cardOrder = i;
-                // dataHandler.patchCardOrder({
-                //     status_id: dataSet.statusId,
-                //     card_order: i,
-                // });
+        } else if ("cardOrder" in element.dataset) {
+            if (parseInt(element.dataset.cardOrder) != i) {
+                let boardId = element.dataset.boardId;
+                let statusId = element.dataset.statusId;
+                let cardId = element.dataset.cardId;
+                element.dataset.cardOrder = i;
+                dataHandler.updateCard(boardId, cardId, {
+                    status_id: statusId,
+                    card_order: i,
+                });
             }
         }
-    }
+        i += 1;
+    });
 }

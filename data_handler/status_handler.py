@@ -72,6 +72,18 @@ def patch_status(status_id: int, data: dict[str, Any]) -> None:
     data_manager.execute_dml(query, data)
 
 
+def patch_status_order(status_id: int, data: dict[str, Any]) -> None:
+
+
+    query: str = """
+        UPDATE board_statuses
+        SET status_order = %(status_order)s
+        WHERE status_id = %(id)s
+    """
+    data.update({"id": status_id})
+    data_manager.execute_dml(query, data)
+
+
 def delete_status(board_id: int, status_id: int) -> None:
 
 
