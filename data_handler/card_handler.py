@@ -153,7 +153,7 @@ def patch_card_order(card_id: int, data: dict[str, Any]) -> None:
 
     query: str = """
         UPDATE cards
-        SET card_order = %(card_order)s
+        SET card_order = %(card_order)s,
             status_id = %(status_id)s
         WHERE id = %(card_id)s
     """
