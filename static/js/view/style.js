@@ -3,10 +3,12 @@ const offset = 50;
 export let styling = {
     adjustContentPadding: () => {
         const mainContent = document.querySelector("main");
+        const faderLayer = document.querySelector(".fader");
         const navbarHeight = document
             .querySelector("nav.navbar")
             .getBoundingClientRect().bottom;
         mainContent.style.paddingTop = navbarHeight + offset + "px";
+        faderLayer.style.setProperty("--faderOffset", navbarHeight + "px");
     },
     adjustBackgroundImageSize: () => {
         const documentHeight = window.innerHeight;
@@ -24,9 +26,3 @@ export let styling = {
         document.body.style.setProperty("--y", `${50 * (y + 1)}%`);
     },
 };
-
-// window.getComputedStyle(document.querySelector("body"), ":before")
-
-// window.innerHeight
-
-// (original height / original width) x new width = new height

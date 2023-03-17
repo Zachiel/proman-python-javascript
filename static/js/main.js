@@ -35,7 +35,6 @@ window.onload = () => {
         styling.adjustBackgroundImageSize();
     };
     window.onmousemove = (e) => {
-        // console.log(e);
         const mouseDeltaY = e.clientY - window.innerHeight / 2;
         const mouseDeltaX = e.clientX - window.innerWidth / 2;
         const maxDeltaY = window.innerHeight / 2;

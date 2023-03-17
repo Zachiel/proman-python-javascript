@@ -7,6 +7,49 @@ $off-white: #e9e6e0;
 $off-black: #2a221e;
 /***** End Theme color palette *****/
 
+/***** Gradient background mixin *****/
+@mixin gradient-background($-brightColor, $-darkColor) {
+    background-size: 100% 100%;
+    background-image: linear-gradient(
+            -45deg,
+            rgba($color: $off-white, $alpha: 1) 0%,
+            rgba($color: $off-white, $alpha: 0.8) 25%,
+            rgba($color: $off-white, $alpha: 0.8) 75%,
+            rgba($color: $off-white, $alpha: 1) 100%
+        ),
+        linear-gradient(
+            180deg,
+            rgba($color: $off-white, $alpha: 0) 0%,
+            rgba($color: $off-white, $alpha: 0) 75%,
+            rgba($color: $off-white, $alpha: 1) 100%
+        ),
+        repeating-linear-gradient(
+            45deg,
+            rgba($color: $-brightColor, $alpha: 0.5) 96%,
+            rgba($color: $-brightColor, $alpha: 0) 100%
+        ),
+        repeating-radial-gradient(
+            75% 75% at -238% 218%,
+            rgba($color: $-brightColor, $alpha: 0.5) 30%,
+            rgba($color: $-darkColor, $alpha: 0.1) 39%
+        ),
+        radial-gradient(
+            99% 99% at 109% 2%,
+            rgba($color: $-brightColor, $alpha: 1) 0%,
+            rgba($color: $-brightColor, $alpha: 0) 100%
+        ),
+        radial-gradient(
+            99% 99% at 21% 78%,
+            rgba($color: $-darkColor, $alpha: 1) 0%,
+            rgba($color: $-darkColor, $alpha: 0) 100%
+        ),
+        radial-gradient(
+            160% 154% at 711px -303px,
+            rgba($color: $off-black, $alpha: 1) 0%,
+            rgba($color: $off-black, $alpha: 1) 100%
+        );
+}
+/***** End Gradient background mixin *****/
 *,
 *:is(::before, ::after) {
     box-sizing: border-box;
@@ -38,8 +81,10 @@ body {
 }
 
 nav {
+    position: relative;
     background-color: #{$off-white};
     div.container {
+        z-index: 1;
         min-height: 100px;
         @media screen and (max-width: 450px) {
             display: block !important;
@@ -54,6 +99,16 @@ nav {
         }
     }
 }
+.bars {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    @include gradient-background($beige, $brown);
+}
 
 a.navbar-brand {
     height: 100px;
@@ -67,8 +122,6 @@ a.navbar-brand {
 
 main {
     position: relative;
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 
 .header__buttons {
@@ -124,6 +177,20 @@ main {
         background-image: none;
         color: white;
     }
+}
+
+.accordion-button {
+    @include gradient-background($beige, $brown);
+    border: 1px solid #{$brown};
+    &:not(.collapsed) {
+        @include gradient-background($light-green, $dark-green);
+    }
+}
+
+.accordion-item {
+    border: 1px solid #{$brown};
+    background: rgba($color: $off-white, $alpha: 0.7);
+    backdrop-filter: blur(5px) sepia(0.2);
 }
 
 .board__body {
@@ -277,4 +344,20 @@ main {
     transform: rotate(3deg);
     opacity: 0.5;
     transition: opacity 100ms;
+}
+
+.fader {
+    position: fixed;
+    overflow: hidden;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    // padding-top: 100px;
+    left: 0px;
+    background-image: linear-gradient(
+        to bottom,
+        #{$off-white} var(--faderOffset),
+        transparent calc(var(--faderOffset) + 75px)
+    );
 }
