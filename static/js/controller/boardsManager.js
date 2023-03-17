@@ -46,10 +46,10 @@ async function addHandler(e) {
     const form = e.target;
     const boardName = form.elements['board-name'].value;
     const isPrivate = form.elements['board-private'].checked;
-    const payload = {'name': boardName, 'is_private': isPrivate};
+    const payload = {'title': boardName, 'is_private': isPrivate};
     const result = await dataHandler.createNewBoard(payload);
     if (result['success']) {
-        showMessage('Successfully added a board, reload to see changes', 'success');
+        showMessage(result['message'], 'success');
     } else {
         showMessage(result['message'], 'error');
     }
