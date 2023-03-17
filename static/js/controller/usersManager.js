@@ -1,6 +1,6 @@
 'use strict';
 import {dataHandler} from "../data/dataHandler.js";
-import {showMessage} from './messages.js';
+import {showMessage} from '../view/utils.js';
 
 export const usersHandler = {
     registerEvent: (e) => {

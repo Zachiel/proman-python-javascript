@@ -9,6 +9,8 @@ from flask import Flask, flash, render_template, url_for, request, redirect
 from flask import session, abort
 from flask.typing import ResponseReturnValue
 import dotenv
+
+from data_handler.user_handler import get_user_by_email
 from util import json_response
 import data_handler.main_handler as dh
 
@@ -86,7 +88,8 @@ def login() -> ResponseReturnValue:
     """
     response = dh.users.validate_login(request.json)
     if response['success']:
-        session['username'] = request.json['username']
+        user = get_user_by_email(request.json['email'])[0]
+        session['username'] = user['username']
     return response
 
 
@@ -134,9 +137,15 @@ def public_boards() -> ResponseReturnValue | None:
     """
 
     if request.method == "POST":
-        data: Any = request.json
-        dh.boards.post_public_board(data["title"])
-        flash(f"board {data['title']} created succesfuly!", "message")
+        published_board = request.json
+        print(published_board)
+        if published_board.get('is_private'):
+            if session.get('username'):
+                return {'success': False, 'message': 'Private boards are not handled yet!'}
+            else:
+                return {'success': False, 'message': 'Cannot add private board if not logged in!'}
+        else:
+            return {'success': False, 'message': 'Public boards are not handled yet!'}
     else:
         return dh.boards.get_all_public_boards()
 
@@ -177,15 +186,14 @@ def public_board(board_id: int) -> ResponseReturnValue | None:
 
 
 @app.route("/api/users/<int:user_id>/boards",\
-    methods=["GET", "POST"])
+    methods=["GET"])
 @json_response
 def user_public_boards(user_id: int) -> ResponseReturnValue | None:
-    """Get all boards owned by specified user from the database or create
-    new bord as it's owner (private or public).
+    """Get all boards owned by specified user from the database
 
-    Methods
+    Method
     -------
-    get, post
+    get
 
     Parameters
     ----------
@@ -196,16 +204,8 @@ def user_public_boards(user_id: int) -> ResponseReturnValue | None:
     -------
     ResponseReturnValue : dict[str, ...]
         JSON object
-    None
-        flashed message
     """
-
-    if request.method == "POST":
-        data: Any = request.json
-        dh.boards.post_private_board(data["title"], user_id)
-        flash(f"board {data['title']} created succesfuly!", "message")
-    else:
-        return dh.boards.get_all_user_public_boards(user_id)
+    return dh.boards.get_all_user_public_boards(user_id)
 
 
 @app.route("/api/users/<int:user_id>/boards/<int:board_id>",\

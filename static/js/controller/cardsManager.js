@@ -1,7 +1,8 @@
-import { dataHandler } from "../data/dataHandler.js";
-import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
-import { domManager } from "../view/domManager.js";
-import { showMessage } from "./messages.js";
+import {dataHandler} from "../data/dataHandler.js";
+import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
+import {domManager} from "../view/domManager.js";
+import {showMessage} from "./messages.js";
+
 
 export let cardsManager = {
     loadCards: async function (boardId, statusId) {
@@ -74,7 +75,7 @@ const handleClosedBoard = (button) => {
 };
 
 const addCard = async (button, boardId, firstStatus) => {
-    const { dom: cardDOMNode, data: cardData } = addCardToDOM(
+    const {dom: cardDOMNode, data: cardData} = addCardToDOM(
         boardId,
         firstStatus
     );
@@ -119,7 +120,7 @@ const addCardToDOM = (boardId, firstStatus) => {
     firstStatus.insertAdjacentHTML("beforeend", cardHMTLContent);
     const cardDOMNode = firstStatus.querySelector(".card:last-child");
     cardDOMNode.toggleAttribute("disabled");
-    return { dom: cardDOMNode, data: card };
+    return {dom: cardDOMNode, data: card};
 };
 
 const checkIfElementIsCard = (element) => {

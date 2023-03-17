@@ -1,9 +1,10 @@
-import { dataHandler } from "../data/dataHandler.js";
-import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
-import { domManager } from "../view/domManager.js";
-import { statusesManager } from "./statusesManager.js";
-import { cardsManager } from "./cardsManager.js";
+import {dataHandler} from "../data/dataHandler.js";
+import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
+import {domManager} from "../view/domManager.js";
+import {statusesManager} from "./statusesManager.js";
+import {cardsManager} from "./cardsManager.js";
 import { dragManager } from "./dragHandler.js";
+import {showMessage, toggleLoadingCursor} from "../view/utils.js";
 
 export let boardsManager = {
     loadBoards: async function () {
@@ -22,6 +23,7 @@ export let boardsManager = {
                 "click",
                 cardsManager.addCardEvent
             );
+
             domManager.addEventListener(
                 `input[data-board-id="${board.id}"]`,
                 "change",
@@ -32,9 +34,28 @@ export let boardsManager = {
                 "click",
                 deleteHandler
             );
+            domManager.addEventListener('#new-board-form', 'submit', addHandler);
         }
     },
 };
+
+
+async function addHandler(e) {
+    e.preventDefault();
+    toggleLoadingCursor()
+    const form = e.target;
+    const boardName = form.elements['board-name'].value;
+    const isPrivate = form.elements['board-private'].checked;
+    const payload = {'name': boardName, 'is_private': isPrivate};
+    const result = await dataHandler.createNewBoard(payload);
+    if (result['success']) {
+        showMessage('Successfully added a board, reload to see changes', 'success');
+    } else {
+        showMessage(result['message'], 'error');
+    }
+    toggleLoadingCursor();
+}
+
 
 async function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;

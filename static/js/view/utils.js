@@ -20,3 +20,7 @@ export const showMessage = (message, type = undefined, timeout = 3000) => {
         setTimeout(() => messageBox.parentNode.removeChild(messageBox), MESSAGE_BOX_ANIMATION_DURATION+50);
     }, timeout);
 };
+
+export const toggleLoadingCursor = () =>{
+    document.querySelector('body').classList.toggle('progress-cur');
+}
