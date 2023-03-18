@@ -158,7 +158,7 @@ def public_boards() -> ResponseReturnValue:
             else:
                 dh.boards.post_public_board(published_board['title'])
                 return {'success': True,
-                        'message': f"Successfully added private board {published_board['title']} without owner"}
+                        'message': f"Successfully added public board {published_board['title']} without owner"}
     else:
         username = session.get('username')
         if username is not None:
