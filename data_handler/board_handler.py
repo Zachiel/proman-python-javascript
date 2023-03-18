@@ -6,6 +6,7 @@ import sys
 from typing import Any
 from functools import reduce
 import data_manager
+import data_handler.main_handler as dh
 
 
 def get_all_public_boards() -> Any:
@@ -133,6 +134,7 @@ def post_public_board(title: str, owner_id: int = 0) -> None:
     board: Any = data_manager.execute_dml(query_boards, {"title": title}, 'one')
     if owner_id > 0:
         data_manager.execute_dml(query_user_boards, {"id": board['id'], "owner_id": owner_id})
+    dh.status.add_default_statuses(board['id'])
     return board
 
 
@@ -166,6 +168,7 @@ def post_private_board(title: str, owner_id: int) -> Any | None:
                                           {"title": title}, 'one')
     data_manager.execute_dml(query_user_boards,
                              {"id": board['id'], "owner_id": owner_id})
+    dh.status.add_default_statuses(board['id'])
     return board
 
 

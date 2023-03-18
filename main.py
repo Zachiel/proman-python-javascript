@@ -114,7 +114,7 @@ def logout() -> ResponseReturnValue:
 @app.route("/api/boards", \
            methods=["GET", "POST"])
 @json_response
-def public_boards() -> ResponseReturnValue | None:
+def public_boards() -> ResponseReturnValue:
     """Route for retrieving or creating public boards.
 
     Methods
@@ -136,11 +136,9 @@ def public_boards() -> ResponseReturnValue | None:
         published_board = request.json
         if published_board.get('is_private'):
             if session.get('username'):
-                user = dh.users.get_user_by_username(session.get('username'))
-                if len(user) != 1:
+                if not dh.users.check_if_user_exists(username=session.get('username')):
                     return {'success': False, 'message': f"Couldn't find user {session.get('username')}"}
-                user = user[0]
-                print(user)
+                user = dh.users.get_user_by_username(session.get('username'))[0]
                 add_board_result = dh.boards.post_private_board(published_board['title'], user['id'])
                 return {'success': True,
                         'message': f"Successfully added private board {add_board_result['title']} for user {user['username']}"}
@@ -148,9 +146,8 @@ def public_boards() -> ResponseReturnValue | None:
                 return {'success': False, 'message': 'Cannot add private board if not logged in!'}
         else:
             if session.get('username'):
-                user = dh.users.get_user_by_username(session.get('username'))
-                if len(user) == 1:
-                    user=user[0]
+                if dh.users.check_if_user_exists(username=session.get('username')):
+                    user = dh.users.get_user_by_username(session.get('username'))[0]
                     dh.boards.post_public_board(published_board['title'], user['id'])
                     return {'success': True,
                             'message': f"Successfully added public board {published_board['title']} for user {user['username']}"}
@@ -166,7 +163,7 @@ def public_boards() -> ResponseReturnValue | None:
            methods=["GET", "PATCH", "DELETE"])
 @json_response
 def public_board(board_id: int) -> ResponseReturnValue | None:
-    """Get specified board from the database, change it's property or delete
+    """Get specified board from the database, change its property or delete
     entire record.
 
     Methods
