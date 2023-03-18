@@ -57,5 +57,5 @@ async function updateHandler() {
 
 async function deleteHandler() {
     await dataHandler.deleteBoard(parseInt(this.dataset.boardId));
-    this.parentElement.remove();
+    this.parentElement.parentElement.remove();
 }

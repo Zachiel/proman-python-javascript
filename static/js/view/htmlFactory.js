@@ -37,29 +37,31 @@ function addStatusBuilder(boardId) {
 }
 
 function boardBuilder(board) {
-    return `<div class="accordion-item position-relative board">
-                <button class="btn btn-secondary board__add-card-button" data-board-id="${board.id}">+ Add card</button>
-                <button class="btn btn-danger button-delete" data-board-id="${board.id}"><i class="fa-solid fa-x"></i></button>
-                <h2 class="accordion-header" id="heading${board.id}">
-                    <div class="accordion-button align-items-baseline collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${board.id}" aria-expanded="false" aria-controls="collapse${board.id}" data-board-id="${board.id}">
-                        <input class="board__title-input m-0 me-3 fs-4" data-board-id="${board.id}" data-board-private="${board.is_private}" value="${board.title}">
-                    </div>
-                </h2>
-                <div id="collapse${board.id}" class="accordion-collapse collapse" aria-labelledby="heading${board.id}"
-                        data-bs-parent="#accordionBoards">
-                    <div class="accordion-body">
-                        <div class="row board__body status-droppable" data-board-id="${board.id}">
-                        </div>
-                    </div>
-                </div>
-            </div>`;
+    return `<div class="accordion-item board">
+    <h2 class="accordion-header position-relative" id="heading${board.id}">
+        <input class="board__title-input" data-board-id="${board.id}"
+            data-board-private="${board.is_private}" value="${board.title}">
+        <button class="btn board__add-card-button" data-board-id="${board.id}">+ Add card</button>
+        <button class="btn btn-sm button-delete delete-board" data-board-id="${board.id}"><i class="fa-solid fa-trash-can"></i></button>
+        <div class="accordion-button align-items-baseline collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapse${board.id}" aria-expanded="false" aria-controls="collapse${board.id}" data-board-id="${board.id}">
+        </div>
+    </h2>
+    <div id="collapse${board.id}" class="accordion-collapse collapse" aria-labelledby="heading${board.id}"
+        data-bs-parent="#accordionBoards">
+        <div class="accordion-body">
+            <div class="row board__body status-droppable" data-board-id="${board.id}">
+            </div>
+        </div>
+    </div>
+</div>`;
 }
 
 function statusBuilder(status) {
-    return `<div class="col-12 col-sm-6 col-md-4 col-lg-3 board__status-column flex-column status-draggable" data-status-id="${status.id}" data-status-order="${status.status_order}" data-board-id="${status.board_id}" draggable="true">
-                <h4 class="board__status-header mb-0 d-flex align-items-center justify-content-center">
+    return `<div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2 board__status-column flex-column status-draggable" data-status-id="${status.id}" data-status-order="${status.status_order}" data-board-id="${status.board_id}" draggable="true">
+                <h4 class="board__status-header mb-0 d-flex align-items-center pt-1">
                     <input class="board__status-input" value="${status.title}" data-status-id="${status.id}" data-board-id="${status.board_id}"/>
-                    <button class="btn btn-danger button-delete" data-board-id="${status.board_id}" data-status-id="${status.id}"><i class="fa-solid fa-x"></i></button>
+                    <button class="btn btn-sm button-delete delete-status" data-board-id="${status.board_id}" data-status-id="${status.id}"><i class="fa-solid fa-trash-can"></i></button>
                 </h4>
                 <div class="board__card-container container d-flex flex-column card-droppable" data-board-id="${status.board_id}" data-status-id="${status.id}">
                 </div>
@@ -71,9 +73,9 @@ function cardBuilder(card) {
                 <div class="card-body">
                     <h5 class="card-title">
                         <input type="text" class="board__card-title" value="${card.title}" data-card-id="${card.id}" data-board-id="${card.board_id}" data-status-id="${card.status_id}" data-card-order="${card.order}" data-card-archived="${card.archived}"/>
-                        <button class="btn btn-danger button-delete" data-board-id="${card.board_id}" data-card-id="${card.id}"><i class="fa-solid fa-x"></i></button>
+                        <button class="btn btn-sm button-delete delete-card" data-board-id="${card.board_id}" data-card-id="${card.id}"><i class="fa-solid fa-trash-can"></i></button>
                     </h5>
-                    <textarea class="card-text board__card-text">${card.body}</textarea>
+                    <textarea class="card-text board__card-text" placeholder="Card description">${card.body}</textarea>
                 </div>
             </fieldset>`;
 }
