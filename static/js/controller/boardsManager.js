@@ -8,6 +8,7 @@ import {showMessage, toggleLoadingCursor} from "../view/utils.js";
 
 export let boardsManager = {
     loadBoards: async function () {
+        document.querySelector('#boardsAccordion').innerHTML='';
         const boards = await dataHandler.getBoards();
         for (let board of boards) {
             const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -35,6 +36,7 @@ export let boardsManager = {
                 deleteHandler
             );
             domManager.addEventListener('#new-board-form', 'submit', addHandler);
+            domManager.addEventListener('#refresh-button', 'click', this.loadBoards);
         }
     },
 };
@@ -54,6 +56,7 @@ async function addHandler(e) {
         showMessage(result['message'], 'error');
     }
     toggleLoadingCursor();
+    await boardsManager.loadBoards();
 }
 
 
