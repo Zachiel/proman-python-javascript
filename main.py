@@ -160,6 +160,13 @@ def public_boards() -> ResponseReturnValue:
                 return {'success': True,
                         'message': f"Successfully added private board {published_board['title']} without owner"}
     else:
+        username = session.get('username')
+        if username is not None:
+            if dh.users.check_if_user_exists(username=username):
+                user = dh.users.get_user_by_username(username)[0]
+                return dh.boards.get_all_user_accessible_boards(user['id'])
+            else:
+                session.pop('username')
         return dh.boards.get_all_public_boards()
 
 
