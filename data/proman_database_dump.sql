@@ -109,8 +109,7 @@ ALTER SEQUENCE public.statuses_id_seq OWNED BY public.statuses.id;
 CREATE TABLE public.user_boards (
     board_id integer NOT NULL,
     user_id integer NOT NULL,
-    user_role character varying(200)[] NOT NULL,
-    CONSTRAINT check_roles CHECK (((user_role)::text = ANY (ARRAY[('owner'::character varying)::text, ('member'::character varying)::text, ('guest'::character varying)::text])))
+    user_role character varying(200)[] NOT NULL
 );
 
 

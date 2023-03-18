@@ -14,6 +14,42 @@ VALIDATION_REGEXS: dict[str] = {'password': r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])
                                 'email': r'^[a-zA-Z0-9\.]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+$'}
 
 
+def check_if_user_exists(username: str | None = None, email: str | None = None) -> bool:
+    """Check if user with provided data exists
+
+    Parameters
+    ----------
+    username : str
+        username of searched user
+
+    email: str
+        e-mail address of searched user
+
+    Returns
+    -------
+    bool
+    """
+    username_user_id = None
+    email_user_id = None
+    if username:
+        user = get_user_by_username(username)
+        if len(user) == 1:
+            username_user_id = user[0]['id']
+        else:
+            return False
+    if email:
+        user = get_user_by_email(email)
+        if len(user) == 1:
+            email_user_id = user[0]['id']
+        else:
+            return False
+    if username and email:
+        if username_user_id == email_user_id:
+            return True
+        else:
+            return False
+    return True
+
 def validate_registration_data(user: dict[Any]) -> dict[str | bool, str]:
     """Check if the provided registration data fulfill registration criteria.
 
@@ -82,7 +118,7 @@ def register_new_user(user: dict[Any]) -> dict[str | bool, str]:
     return response
 
 
-def validate_login(login_data: dict[str]):
+def validate_login(login_data: dict[str]) -> dict[str]:
     """Validate login information.
 
     Parameters

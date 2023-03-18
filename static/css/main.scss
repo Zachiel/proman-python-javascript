@@ -7,6 +7,12 @@
     box-sizing: border-box;
 }
 
+body{
+    &.progress-cur{
+        cursor: progress;
+    }
+}
+
 #boards {
     background-color: green;
 }

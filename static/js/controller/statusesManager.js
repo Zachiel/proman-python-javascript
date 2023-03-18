@@ -2,7 +2,7 @@ import { dataHandler } from "../data/dataHandler.js";
 import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
 import { domManager } from "../view/domManager.js";
 import { cardsManager } from "./cardsManager.js";
-import { showMessage } from "./messages.js";
+import { showMessage } from "../view/utils.js";
 
 export let statusesManager = {
     loadStatuses: async function (boardId) {

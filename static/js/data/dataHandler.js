@@ -5,8 +5,8 @@ export let dataHandler = {
     getBoard: async function (boardId) {
         // the board is retrieved and then the callback function is called with the board
     },
-    createNewBoard: async function (boardTitle) {
-        // creates new board, saves it and calls the callback function with its data
+    createNewBoard: async function (payload) {
+        return await apiPost('/api/boards' ,payload);
     },
     updateBoard: async function (payload) {
         return await apiPatch(`/api/boards/${payload.id}`, payload);
@@ -76,6 +76,8 @@ async function apiPost(url, payload) {
     if (response.ok) {
         return await response.json();
     }
+    else
+        return {'success': false, 'message': `Response not ok: ${response.status}`};
 }
 
 async function apiDelete(url) {
