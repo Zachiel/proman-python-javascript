@@ -22,7 +22,7 @@
                             <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="right"
                                   data-bs-title="Only for logged in users">
                         {% endif %}
-                        <input id="board-private" type="checkbox" name="board-private" minlength="8"
+                        <input id="board-private" type="checkbox" name="board-private"
                                class="form-check-input" {% if not logged_in %}disabled{% endif %}/>
                         {% if not logged_in %}
                             </span>

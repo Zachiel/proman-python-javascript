@@ -124,6 +124,18 @@ button {
     @include gradient-background($beige, $brown);
 }
 
+body {
+    &.progress-cur {
+        cursor: progress;
+    }
+}
+
+body {
+    &.progress-cur {
+        cursor: progress;
+    }
+}
+
 a.navbar-brand {
     height: 100px;
     width: auto;

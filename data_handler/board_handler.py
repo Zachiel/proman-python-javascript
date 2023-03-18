@@ -6,6 +6,7 @@ import sys
 from typing import Any
 from functools import reduce
 import data_manager
+import data_handler.main_handler as dh
 
 
 def get_all_public_boards() -> Any:
@@ -25,6 +26,32 @@ def get_all_public_boards() -> Any:
     public_boards: Any = data_manager.execute_select(query)
 
     return public_boards
+
+
+def get_all_user_accessible_boards(user_id: int) -> Any:
+    """
+    Gather all boards that are accessible for specific user
+
+    Parameters
+    ----------
+    user_id : int
+
+    Returns
+    -------
+    Any
+        JSON object
+    """
+    query: str = """
+        SELECT boards.id, boards.title, boards.is_private
+        FROM boards
+        LEFT JOIN user_boards
+        ON user_boards.board_id = boards.id
+        WHERE is_private = FALSE
+        OR (is_private = TRUE AND user_id = %s)
+        ORDER BY boards.id
+    """
+    return data_manager.execute_select(query, [user_id])
+
 
 def get_public_board(board_id: int) -> Any:
     """Gather public board with specified id.
@@ -98,12 +125,12 @@ def get_user_public_board(user_id: int, board_id: int) -> Any:
         AND b.id = %(board_id)s
         """
     public_board: Any = data_manager.execute_select(query,
-        {"user_id": user_id, "board_id": board_id}, False)
+                                                    {"user_id": user_id, "board_id": board_id}, False)
 
     return public_board
 
 
-def post_public_board(title: str, owner_id: int=0) -> None:
+def post_public_board(title: str, owner_id: int = 0) -> None:
     """Create new public board.
 
     Parameters
@@ -119,22 +146,24 @@ def post_public_board(title: str, owner_id: int=0) -> None:
         VALUES (
             %(title)s
         )
-        RETURNING id
+        RETURNING *
         """
     query_user_boards: str = """
         INSERT INTO user_boards (board_id, user_id, user_role)
         VALUES (
             %(id)s,
             %(owner_id)s,
-            'owner_id'
+            '{"owner_id"}'
         )
         """
-    board_id: Any = data_manager.execute_dml(query_boards, {"title": title}, True)
+    board: Any = data_manager.execute_dml(query_boards, {"title": title}, 'one')
     if owner_id > 0:
-        data_manager.execute_dml(query_user_boards, {"id": board_id,"owner_id": owner_id})
+        data_manager.execute_dml(query_user_boards, {"id": board['id'], "owner_id": owner_id})
+    dh.status.add_default_statuses(board['id'])
+    return board
 
 
-def post_private_board(title: str, owner_id: int) -> None:
+def post_private_board(title: str, owner_id: int) -> Any | None:
     """Create new private board.
 
     Parameters
@@ -150,25 +179,25 @@ def post_private_board(title: str, owner_id: int) -> None:
         VALUES (
             %(title)s, TRUE
         )
-        RETURNING id
+        RETURNING *
         """
     query_user_boards: str = """
         INSERT INTO user_boards (board_id, user_id, user_role)
         VALUES (
             %(id)s,
             %(owner_id)s,
-            'owner_id'
+            '{"owner"}'
         )
         """
-    board_id: Any = data_manager.execute_dml(query_boards,
-        {"title": title}, True)
+    board: Any = data_manager.execute_dml(query_boards,
+                                          {"title": title}, 'one')
     data_manager.execute_dml(query_user_boards,
-        {"id": board_id['id'],"owner_id": owner_id})
+                             {"id": board['id'], "owner_id": owner_id})
+    dh.status.add_default_statuses(board['id'])
+    return board
 
 
 def delete_board(board_id: int) -> None:
-
-
     query_boards: str = """
     DELETE FROM boards
     WHERE id = %(board_id)s
@@ -181,7 +210,7 @@ def delete_board(board_id: int) -> None:
     DELETE FROM board_statuses
     WHERE board_id = %(board_id)s
     RETURNING status_id"""
-    
+
     query_statuses: str = """
     DELETE FROM statuses
     WHERE id = %(status_id)s"""
@@ -192,18 +221,16 @@ def delete_board(board_id: int) -> None:
     """
     data_manager.execute_dml(query_cards, {"board_id": board_id})
     statuses_to_remove: Any = data_manager.execute_dml(query_board_statuses,
-        {"board_id": board_id}, "All")
+                                                       {"board_id": board_id}, "All")
     print(statuses_to_remove, file=sys.stderr)
     for status in statuses_to_remove:
         data_manager.execute_dml(query_statuses, {"status_id": int(status["status_id"])})
     data_manager.execute_dml(query_user_boards,
-        {"board_id": board_id})
+                             {"board_id": board_id})
     data_manager.execute_dml(query_boards, {"board_id": board_id})
 
 
 def patch_board(board_id: int, data: dict[str, Any]) -> None:
-
-
     query: str = """
         UPDATE boards
         SET title = %(title)s, is_private = %(is_private)s

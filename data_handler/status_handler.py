@@ -7,10 +7,23 @@ from typing import Any
 from functools import reduce
 import data_manager
 
+DEFAULT_STATUSES = ['new', 'in progress', 'testing', 'done']
+
+
+def add_default_statuses(board_id: int) -> None:
+    """
+        Add default statuses to a board
+
+    Parameters
+    ----------
+    board_id : int
+        id of the board to add the statuses to
+    """
+    for status in DEFAULT_STATUSES:
+        post_status(board_id, status)
+
 
 def get_status(status_id: int) -> Any:
-
-
     query: str = """
     SELECT title
     FROM statuses
@@ -22,8 +35,6 @@ def get_status(status_id: int) -> Any:
 
 
 def get_board_statuses(board_id: int) -> Any:
-
-
     query: str = """
     SELECT *
     FROM board_statuses AS bs
@@ -36,7 +47,10 @@ def get_board_statuses(board_id: int) -> Any:
 
 
 def post_status(board_id: int, title: str) -> Any:
-
+    query_select_status: str = """
+    SELECT id FROM statuses
+    WHERE title = %s
+    """
     query_statuses: str = """
     INSERT INTO statuses (title)
     VALUES(
@@ -44,25 +58,29 @@ def post_status(board_id: int, title: str) -> Any:
     )
     RETURNING id
     """
+    query_status_order: str = """
+    SELECT
+            (MAX(status_order) + 1) AS status_order
+            FROM board_statuses
+            WHERE board_id = %(board_id)s
+            """
     query_board_statuses: str = """
     INSERT INTO board_statuses (status_id, board_id, status_order)
     VALUES (
-        %(status_id)s, %(board_id)s, 
-        (SELECT
-            (MAX(status_order) + 1)
-            FROM board_statuses
-            WHERE board_id = %(board_id)s)
+        %(status_id)s, %(board_id)s, %(status_order)s
+        
     )
     """
-    status: Any = data_manager.execute_dml(query_statuses, {"title": title}, 'one')
+    status = data_manager.execute_select(query_select_status, [title], False)
+    status: Any = status if status is not None else data_manager.execute_dml(query_statuses, {"title": title}, 'one')
+    status_order = data_manager.execute_select(query_status_order, variables={'board_id': board_id}, fetchall=False)
     data_manager.execute_dml(query_board_statuses,
-        {"status_id": status["id"], "board_id": board_id})
+                             {"status_id": status["id"], "board_id": board_id,
+                              "status_order": status_order['status_order'] if status_order['status_order'] is not None else 1})
     return status
 
 
 def patch_status(status_id: int, data: dict[str, Any]) -> None:
-
-
     query: str = """
         UPDATE statuses
         SET title = %(title)s
@@ -85,8 +103,6 @@ def patch_status_order(status_id: int, data: dict[str, Any]) -> None:
 
 
 def delete_status(board_id: int, status_id: int) -> None:
-
-
     query_statuses: str = """
     DELETE FROM statuses
     WHERE id = %(status_id)s
@@ -102,5 +118,5 @@ def delete_status(board_id: int, status_id: int) -> None:
     """
     data_manager.execute_dml(query_cards, {"status_id": status_id})
     data_manager.execute_dml(query_board_statuses,
-        {"status_id": status_id, "board_id": board_id})
+                             {"status_id": status_id, "board_id": board_id})
     data_manager.execute_dml(query_statuses, {"status_id": status_id})

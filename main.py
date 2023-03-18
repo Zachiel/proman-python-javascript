@@ -9,6 +9,7 @@ from flask import Flask, flash, render_template, url_for, request, redirect
 from flask import session, abort
 from flask.typing import ResponseReturnValue
 import dotenv
+
 from util import json_response
 import data_handler.main_handler as dh
 
@@ -21,8 +22,8 @@ app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
 app.secret_key = b'B!qKM7y!;;N7qie5'
 
 
-@app.route("/",\
-    methods=["GET"])
+@app.route("/", \
+           methods=["GET"])
 def index() -> str:
     """Root route which displays all boards and cards.
 
@@ -38,15 +39,16 @@ def index() -> str:
     user = None
     logged_in = False
     if 'username' in session:
-        user = dh.users.get_user_by_username(session['username'])
-        if len(user) == 1:
-            user = user[0]
+        if dh.users.check_if_user_exists(username=session['username']):
+            user = dh.users.get_user_by_username(session['username'])[0]
             logged_in = True
+        else:
+            session.pop('username')
     return render_template('pages/index.html', logged_in=logged_in, user=user)
 
 
-@app.route("/register",\
-    methods=["POST"])
+@app.route("/register", \
+           methods=["POST"])
 @json_response
 def registration() -> Any:
     """Route to register a new user to database.
@@ -69,8 +71,8 @@ def registration() -> Any:
     return dh.users.register_new_user(new_user)
 
 
-@app.route("/login",\
-    methods=["POST"])
+@app.route("/login", \
+           methods=["POST"])
 @json_response
 def login() -> ResponseReturnValue:
     """Route for logging in a user and creating session.
@@ -86,12 +88,13 @@ def login() -> ResponseReturnValue:
     """
     response = dh.users.validate_login(request.json)
     if response['success']:
-        session['username'] = request.json['username']
+        user = dh.users.get_user_by_email(request.json['email'])[0]
+        session['username'] = user['username']
     return response
 
 
-@app.route("/logout",\
-    methods=["GET"])
+@app.route("/logout", \
+           methods=["GET"])
 def logout() -> ResponseReturnValue:
     """Route for logging out an user and clearing session data.
 
@@ -109,13 +112,10 @@ def logout() -> ResponseReturnValue:
     return redirect(url_for("index"))
 
 
-
-
-
-@app.route("/api/boards",\
-    methods=["GET", "POST"])
+@app.route("/api/boards", \
+           methods=["GET", "POST"])
 @json_response
-def public_boards() -> ResponseReturnValue | None:
+def public_boards() -> ResponseReturnValue:
     """Route for retrieving or creating public boards.
 
     Methods
@@ -134,18 +134,47 @@ def public_boards() -> ResponseReturnValue | None:
     """
 
     if request.method == "POST":
-        data: Any = request.json
-        dh.boards.post_public_board(data["title"])
-        flash(f"board {data['title']} created succesfuly!", "message")
+        published_board = request.json
+        if published_board.get('is_private'):
+            if session.get('username'):
+                if not dh.users.check_if_user_exists(username=session.get('username')):
+                    return {'success': False, 'message': f"Couldn't find user {session.get('username')}"}
+                user = dh.users.get_user_by_username(session.get('username'))[0]
+                add_board_result = dh.boards.post_private_board(published_board['title'], user['id'])
+                return {'success': True,
+                        'message': f"Successfully added private board {add_board_result['title']} for user {user['username']}"}
+            else:
+                return {'success': False, 'message': 'Cannot add private board if not logged in!'}
+        else:
+            if session.get('username'):
+                if dh.users.check_if_user_exists(username=session.get('username')):
+                    user = dh.users.get_user_by_username(session.get('username'))[0]
+                    dh.boards.post_public_board(published_board['title'], user['id'])
+                    return {'success': True,
+                            'message': f"Successfully added public board {published_board['title']} for user {user['username']}"}
+                else:
+                    return {'success': False,
+                            'message': f"Request sent as logged in user: {session.get('username')}, but there is no such user"}
+            else:
+                dh.boards.post_public_board(published_board['title'])
+                return {'success': True,
+                        'message': f"Successfully added public board {published_board['title']} without owner"}
     else:
+        username = session.get('username')
+        if username is not None:
+            if dh.users.check_if_user_exists(username=username):
+                user = dh.users.get_user_by_username(username)[0]
+                return dh.boards.get_all_user_accessible_boards(user['id'])
+            else:
+                session.pop('username')
         return dh.boards.get_all_public_boards()
 
 
-@app.route("/api/boards/<int:board_id>",\
-    methods=["GET", "PATCH", "DELETE"])
+@app.route("/api/boards/<int:board_id>", \
+           methods=["GET", "PATCH", "DELETE"])
 @json_response
 def public_board(board_id: int) -> ResponseReturnValue | None:
-    """Get specified board from the database, change it's property or delete
+    """Get specified board from the database, change its property or delete
     entire record.
 
     Methods
@@ -176,16 +205,15 @@ def public_board(board_id: int) -> ResponseReturnValue | None:
         return dh.boards.get_public_board(board_id)
 
 
-@app.route("/api/users/<int:user_id>/boards",\
-    methods=["GET", "POST"])
+@app.route("/api/users/<int:user_id>/boards", \
+           methods=["GET"])
 @json_response
 def user_public_boards(user_id: int) -> ResponseReturnValue | None:
-    """Get all boards owned by specified user from the database or create
-    new bord as it's owner (private or public).
+    """Get all boards owned by specified user from the database
 
-    Methods
+    Method
     -------
-    get, post
+    get
 
     Parameters
     ----------
@@ -196,20 +224,12 @@ def user_public_boards(user_id: int) -> ResponseReturnValue | None:
     -------
     ResponseReturnValue : dict[str, ...]
         JSON object
-    None
-        flashed message
     """
-
-    if request.method == "POST":
-        data: Any = request.json
-        dh.boards.post_private_board(data["title"], user_id)
-        flash(f"board {data['title']} created succesfuly!", "message")
-    else:
-        return dh.boards.get_all_user_public_boards(user_id)
+    return dh.boards.get_all_user_public_boards(user_id)
 
 
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>",\
-    methods=["GET", "PATCH", "DELETE"])
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>", \
+           methods=["GET", "PATCH", "DELETE"])
 @json_response
 def user_public_board(user_id: int, board_id: int) -> ResponseReturnValue | None:
     """Get specified board owned by specified user from the database, change
@@ -246,8 +266,8 @@ def user_public_board(user_id: int, board_id: int) -> ResponseReturnValue | None
         return dh.boards.get_user_public_board(user_id, board_id)
 
 
-@app.route("/api/boards/<int:board_id>/cards",\
-    methods=["GET", "POST"])
+@app.route("/api/boards/<int:board_id>/cards", \
+           methods=["GET", "POST"])
 @json_response
 def cards_public_board(board_id: int) -> ResponseReturnValue | None:
     """Get all cards belonging to specified public board from the database or
@@ -281,8 +301,8 @@ def cards_public_board(board_id: int) -> ResponseReturnValue | None:
         return dh.cards.get_all_cards_public_board(board_id)
 
 
-@app.route("/api/boards/<int:board_id>/cards/<int:card_id>",\
-    methods=["GET", "PATCH", "DELETE"])
+@app.route("/api/boards/<int:board_id>/cards/<int:card_id>", \
+           methods=["GET", "PATCH", "DELETE"])
 @json_response
 def card_public_board(board_id: int, card_id: int) -> ResponseReturnValue | None:
     """Get specified card for a specified board from the database, change it's
@@ -322,11 +342,11 @@ def card_public_board(board_id: int, card_id: int) -> ResponseReturnValue | None
         return dh.cards.get_card_public_board(board_id, card_id)
 
 
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards",\
-    methods=["GET", "POST"])
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards", \
+           methods=["GET", "POST"])
 @json_response
 def cards_user_public_board(
-    user_id: int, board_id: int) -> ResponseReturnValue | None:
+        user_id: int, board_id: int) -> ResponseReturnValue | None:
     """Get all cards belonging to specified user board from the database or
     create a new card on a private board.
 
@@ -357,11 +377,11 @@ def cards_user_public_board(
         return dh.cards.get_all_cards_user_public_board(user_id, board_id)
 
 
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards/<int:card_id>",\
-    methods=["GET", "PATCH", "DELETE"])
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards/<int:card_id>", \
+           methods=["GET", "PATCH", "DELETE"])
 @json_response
 def card_user_public_board(
-    user_id: int, board_id: int, card_id: int) -> ResponseReturnValue | None:
+        user_id: int, board_id: int, card_id: int) -> ResponseReturnValue | None:
     """Get all cards belonging to the specified user board from the database,
     change it's property or delete entire record.
 
@@ -396,15 +416,13 @@ def card_user_public_board(
             dh.cards.delete_card(card_id)
     else:
         return dh.cards.get_card_user_public_board(
-        user_id, board_id, card_id)
+            user_id, board_id, card_id)
 
 
-@app.route("/api/boards/<int:board_id>/statuses",\
-    methods=["GET", "POST"])
+@app.route("/api/boards/<int:board_id>/statuses", \
+           methods=["GET", "POST"])
 @json_response
 def statuses_public_board(board_id: int) -> ResponseReturnValue | None:
-
-
     if request.method == "POST":
         data: Any = request.json
         result: Any = dh.status.post_status(board_id, data["title"])
@@ -414,13 +432,11 @@ def statuses_public_board(board_id: int) -> ResponseReturnValue | None:
         return dh.status.get_board_statuses(board_id)
 
 
-@app.route("/api/boards/<int:board_id>/statuses/<int:status_id>",\
-    methods=["GET", "PATCH", "DELETE"])
+@app.route("/api/boards/<int:board_id>/statuses/<int:status_id>", \
+           methods=["GET", "PATCH", "DELETE"])
 @json_response
 def status_public_board(board_id: int, status_id: int
-    ) -> ResponseReturnValue | None:
-
-
+                        ) -> ResponseReturnValue | None:
     if request.method != "GET":
         user: str = session.get("username", default='')
         is_allowed: bool = dh.users.check_permission(user, board_id)
@@ -436,12 +452,10 @@ def status_public_board(board_id: int, status_id: int
         return dh.status.get_status(status_id)
 
 
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards",\
-    methods=["GET", "POST"])
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/cards", \
+           methods=["GET", "POST"])
 @json_response
 def statuses_user_public_board(board_id: int) -> ResponseReturnValue | None:
-
-
     if request.method == "POST":
         data: Any = request.json
         dh.status.post_status(board_id, data["title"])
@@ -450,13 +464,11 @@ def statuses_user_public_board(board_id: int) -> ResponseReturnValue | None:
         return dh.status.get_board_statuses(board_id)
 
 
-@app.route("/api/users/<int:user_id>/boards/<int:board_id>/statuses/<int:status_id>",\
-    methods=["GET", "PATCH", "DELETE"])
+@app.route("/api/users/<int:user_id>/boards/<int:board_id>/statuses/<int:status_id>", \
+           methods=["GET", "PATCH", "DELETE"])
 @json_response
 def status_user_public_board(board_id: int, status_id: int
-    ) -> ResponseReturnValue | None:
-
-
+                             ) -> ResponseReturnValue | None:
     if request.method != "GET":
         user: str = session.get("username", default='')
         is_allowed: bool = dh.users.check_permission(user, board_id)
@@ -469,8 +481,8 @@ def status_user_public_board(board_id: int, status_id: int
         return dh.status.get_status(status_id)
 
 
-@app.route("/api/users",\
-    methods=["GET", "POST"])
+@app.route("/api/users", \
+           methods=["GET", "POST"])
 @json_response
 def users() -> ResponseReturnValue | None:
     """Get all users from the database.
@@ -490,8 +502,8 @@ def users() -> ResponseReturnValue | None:
     return dh.users.get_all_users()
 
 
-@app.route("/api/users/<int:user_id>",\
-    methods=["GET"])
+@app.route("/api/users/<int:user_id>", \
+           methods=["GET"])
 @json_response
 def get_user(user_id: int) -> ResponseReturnValue | None:
     """Get specified user profile from database.
