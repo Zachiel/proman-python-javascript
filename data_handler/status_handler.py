@@ -74,7 +74,6 @@ def post_status(board_id: int, title: str) -> Any:
     status = data_manager.execute_select(query_select_status, [title], False)
     status: Any = status if status is not None else data_manager.execute_dml(query_statuses, {"title": title}, 'one')
     status_order = data_manager.execute_select(query_status_order, variables={'board_id': board_id}, fetchall=False)
-    print(status['id'], board_id, status_order)
     data_manager.execute_dml(query_board_statuses,
                              {"status_id": status["id"], "board_id": board_id,
                               "status_order": status_order['status_order'] if status_order['status_order'] is not None else 1})
