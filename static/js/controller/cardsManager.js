@@ -33,6 +33,14 @@ export let cardsManager = {
                     "click",
                     deleteHandler
                 );
+                const inputs = document.querySelectorAll("input");
+                const textareas = document.querySelectorAll("textarea");
+                const fields = [...inputs, ...textareas];
+                fields.forEach((field) => {
+                    field.addEventListener("focus", () => {
+                        field.setSelectionRange(-1, -1);
+                    });
+                });
             }
         }
     },
