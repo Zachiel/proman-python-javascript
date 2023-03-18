@@ -39,10 +39,11 @@ def index() -> str:
     user = None
     logged_in = False
     if 'username' in session:
-        user = dh.users.get_user_by_username(session['username'])
-        if len(user) == 1:
-            user = user[0]
+        if dh.users.check_if_user_exists(username=session['username']):
+            user = dh.users.get_user_by_username(session['username'])[0]
             logged_in = True
+        else:
+            session.pop('username')
     return render_template('pages/index.html', logged_in=logged_in, user=user)
 
 
@@ -151,6 +152,9 @@ def public_boards() -> ResponseReturnValue:
                     dh.boards.post_public_board(published_board['title'], user['id'])
                     return {'success': True,
                             'message': f"Successfully added public board {published_board['title']} for user {user['username']}"}
+                else:
+                    return {'success': False,
+                            'message': f"Request sent as logged in user: {session.get('username')}, but there is no such user"}
             else:
                 dh.boards.post_public_board(published_board['title'])
                 return {'success': True,

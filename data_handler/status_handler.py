@@ -47,6 +47,10 @@ def get_board_statuses(board_id: int) -> Any:
 
 
 def post_status(board_id: int, title: str) -> Any:
+    query_select_status: str = """
+    SELECT id FROM statuses
+    WHERE title = %s
+    """
     query_statuses: str = """
     INSERT INTO statuses (title)
     VALUES(
@@ -67,7 +71,8 @@ def post_status(board_id: int, title: str) -> Any:
         
     )
     """
-    status: Any = data_manager.execute_dml(query_statuses, {"title": title}, 'one')
+    status = data_manager.execute_select(query_select_status, [title], False)
+    status: Any = status if status is not None else data_manager.execute_dml(query_statuses, {"title": title}, 'one')
     status_order = data_manager.execute_select(query_status_order, variables={'board_id': board_id}, fetchall=False)
     print(status['id'], board_id, status_order)
     data_manager.execute_dml(query_board_statuses,
