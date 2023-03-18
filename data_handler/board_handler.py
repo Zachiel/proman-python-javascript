@@ -28,6 +28,31 @@ def get_all_public_boards() -> Any:
     return public_boards
 
 
+def get_all_user_accessible_boards(user_id: int) -> Any:
+    """
+    Gather all boards that are accessible for specific user
+
+    Parameters
+    ----------
+    user_id : int
+
+    Returns
+    -------
+    Any
+        JSON object
+    """
+    query: str = """
+        SELECT boards.id, boards.title, boards.is_private
+        FROM boards
+        LEFT JOIN user_boards
+        ON user_boards.board_id = boards.id
+        WHERE is_private = FALSE
+        OR (is_private = TRUE AND user_id = %s)
+        ORDER BY boards.id
+    """
+    return data_manager.execute_select(query, [user_id])
+
+
 def get_public_board(board_id: int) -> Any:
     """Gather public board with specified id.
 
