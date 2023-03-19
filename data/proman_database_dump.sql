@@ -161,13 +161,13 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 INSERT INTO public.board_statuses VALUES (1, 1, 1);
-INSERT INTO public.board_statuses VALUES (2, 1, 1);
 INSERT INTO public.board_statuses VALUES (1, 2, 2);
-INSERT INTO public.board_statuses VALUES (2, 2, 2);
 INSERT INTO public.board_statuses VALUES (1, 3, 3);
-INSERT INTO public.board_statuses VALUES (2, 3, 3);
 INSERT INTO public.board_statuses VALUES (1, 4, 4);
-INSERT INTO public.board_statuses VALUES (2, 4, 4);
+INSERT INTO public.board_statuses VALUES (2, 5, 1);
+INSERT INTO public.board_statuses VALUES (2, 6, 2);
+INSERT INTO public.board_statuses VALUES (2, 7, 3);
+INSERT INTO public.board_statuses VALUES (2, 8, 4);
 
 
 
@@ -182,12 +182,12 @@ INSERT INTO public.cards VALUES (3, 1, 2, 'in progress card', 1, false, NULL);
 INSERT INTO public.cards VALUES (4, 1, 3, 'planning', 1, false, NULL);
 INSERT INTO public.cards VALUES (5, 1, 4, 'done card 1', 1, false, NULL);
 INSERT INTO public.cards VALUES (6, 1, 4, 'done card 2', 2, false, NULL);
-INSERT INTO public.cards VALUES (7, 2, 1, 'board 2 card 1', 1, false, NULL);
-INSERT INTO public.cards VALUES (8, 2, 1, 'board 2 card 2', 2, false, NULL);
-INSERT INTO public.cards VALUES (9, 2, 2, 'board 2 wip', 1, false, NULL);
-INSERT INTO public.cards VALUES (10, 2, 3, 'board 2 planning', 1, false, NULL);
-INSERT INTO public.cards VALUES (11, 2, 4, 'board 2 done 1', 1, false, NULL);
-INSERT INTO public.cards VALUES (12, 2, 4, 'board 2 done 2', 2, false, NULL);
+INSERT INTO public.cards VALUES (7, 2, 5, 'board 2 card 1', 1, false, NULL);
+INSERT INTO public.cards VALUES (8, 2, 5, 'board 2 card 2', 2, false, NULL);
+INSERT INTO public.cards VALUES (9, 2, 6, 'board 2 wip', 1, false, NULL);
+INSERT INTO public.cards VALUES (10, 2, 7, 'board 2 planning', 1, false, NULL);
+INSERT INTO public.cards VALUES (11, 2, 8, 'board 2 done 1', 1, false, NULL);
+INSERT INTO public.cards VALUES (12, 2, 8, 'board 2 done 2', 2, false, NULL);
 
 
 
@@ -195,6 +195,10 @@ INSERT INTO public.statuses VALUES (1, 'new');
 INSERT INTO public.statuses VALUES (2, 'in progress');
 INSERT INTO public.statuses VALUES (3, 'testing');
 INSERT INTO public.statuses VALUES (4, 'done');
+INSERT INTO public.statuses VALUES (5, 'new');
+INSERT INTO public.statuses VALUES (6, 'in progress');
+INSERT INTO public.statuses VALUES (7, 'testing');
+INSERT INTO public.statuses VALUES (8, 'done');
 
 
 
