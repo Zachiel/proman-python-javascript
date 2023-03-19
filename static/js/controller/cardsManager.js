@@ -2,6 +2,7 @@ import {dataHandler} from "../data/dataHandler.js";
 import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
 import {domManager} from "../view/domManager.js";
 import {showMessage} from "../view/utils.js";
+import {dragManager} from './dragHandler.js';
 
 
 export let cardsManager = {
@@ -47,7 +48,7 @@ export let cardsManager = {
     addCardEvent: async (e) => {
         const button = e.currentTarget;
         button.toggleAttribute("disabled");
-        const board = button.parentNode;
+        const board = button.parentNode.parentNode;
         if (isBoardOpen(board)) {
             const boardId = board.querySelector(".board__title-input").dataset
                 .boardId;
@@ -108,6 +109,15 @@ const updateDOMCard = (button, cardDOMNode, addCardResponse) => {
     const deleteButton = cardDOMNode.querySelector(".button-delete");
     deleteButton.dataset.cardId = addCardResponse["card"]["id"];
     deleteButton.addEventListener("click", deleteHandler);
+    const inputs = cardDOMNode.querySelectorAll("input");
+    const textareas = cardDOMNode.querySelectorAll("textarea");
+    const fields = [...inputs, ...textareas];
+    fields.forEach((field) => {
+        field.addEventListener("focus", () => {
+            field.setSelectionRange(-1, -1);
+        });
+    });
+    dragManager.handleNewElement(cardDOMNode,'card');
 };
 
 const addCardToDB = async (card) => {
