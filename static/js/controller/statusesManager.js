@@ -1,8 +1,9 @@
-import { dataHandler } from "../data/dataHandler.js";
-import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
-import { domManager } from "../view/domManager.js";
-import { cardsManager } from "./cardsManager.js";
-import { showMessage } from "../view/utils.js";
+import {dataHandler} from "../data/dataHandler.js";
+import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
+import {domManager} from "../view/domManager.js";
+import {cardsManager} from "./cardsManager.js";
+import {showMessage} from "../view/utils.js";
+import {dragManager} from './dragHandler.js'
 
 export let statusesManager = {
     loadStatuses: async function (boardId) {
@@ -69,7 +70,7 @@ const handleAddStatus = async (e) => {
 
 const handleAddStatusToDBError = (error, statusObject) => {
     showMessage("There was an error: " + error.toString(), error);
-    statusObject.renderedCardContainer.parentElement.remove();
+    statusObject.renderedStatus.parentElement.remove();
 };
 
 const addStatusToDB = async (statusObject, newStatusTitle, boardId) => {
@@ -77,11 +78,15 @@ const addStatusToDB = async (statusObject, newStatusTitle, boardId) => {
         title: newStatusTitle,
         boardId: boardId,
     });
+    console.log(statusResponse);
     for (let key in statusObject) {
         statusObject[key].dataset.statusId = statusResponse.id;
     }
     statusObject.renderedInput.toggleAttribute("disabled");
     statusObject.renderedInput.addEventListener("change", updateHandler);
+    dragManager.handleNewElement(statusObject.renderedStatus,"statusDrag" );
+    dragManager.handleNewElement(statusObject.renderedCardContainer,"statusDrop" );
+
 };
 
 const createTemporaryStatus = async (boardId, title, lastElem) => {
@@ -97,9 +102,10 @@ const createTemporaryStatus = async (boardId, title, lastElem) => {
         renderedInput: document.querySelector(
             `input[data-status-id=${temporaryStatusID}]`
         ),
-        renderedCardContainer: document.querySelector(
+        renderedStatus: document.querySelector(
             `div[data-status-id=${temporaryStatusID}]`
         ),
+        renderedCardContainer: document.querySelector(`div[data-status-id=${temporaryStatusID}].card-droppable`)
     };
     statusObject.renderedInput.toggleAttribute("disabled");
     return statusObject;

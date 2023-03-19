@@ -24,11 +24,15 @@ export let dragManager = {
         });
     },
     handleNewElement: function (elem, type) {
-        const TYPES = {board: 0, status: 1, card: 2};
+        console.log('elem:');
+        console.log(elem);
+        const TYPES = {board: 0, statusDrag: 1, statusDrop: 2, card: 3};
         const FUNCTIONS = [{'dragover': statusDragOver}, {
-            'dragstart': statusDragStart,
+            'dragstart': statusDragStart},{
             'dragover': cardDragOver
         }, {'dragstart': cardDragStart}];
+        const ADDERS = [addDraggableCard, addDraggableStatus, addDroppableStatus, addDroppableBoard];
+        ADDERS[TYPES[type]](elem);
         const functionsToAdd = FUNCTIONS[TYPES[type]];
         for (let key in functionsToAdd) {
             elem.addEventListener(key, functionsToAdd[key]);
@@ -36,6 +40,21 @@ export let dragManager = {
     }
 };
 
+function addDraggableCard(card){
+    draggableCards.push(card);
+}
+
+function addDraggableStatus(status){
+    draggableStatuses.push(status);
+}
+
+function addDroppableStatus(status){
+    droppableStatuses.push(status);
+}
+
+function addDroppableBoard(board){
+    droppableBoards.push(board);
+}
 
 function cardDragStart(event) {
     this.classList.add("card-dragging");
@@ -61,6 +80,7 @@ function cardDragEnd(event) {
 }
 
 function statusDragStart(event) {
+    console.log('start status drag');
     this.classList.add("status-dragging");
     this.addEventListener("dragend", statusDragEnd);
 }
