@@ -1,4 +1,4 @@
-import { dataHandler } from "../data/dataHandler.js";
+import {dataHandler} from "../data/dataHandler.js";
 
 let draggableCards, draggableStatuses, droppableStatuses, droppableBoards;
 
@@ -23,7 +23,19 @@ export let dragManager = {
             board.addEventListener("dragover", statusDragOver);
         });
     },
+    handleNewElement: function (elem, type) {
+        const TYPES = {board: 0, status: 1, card: 2};
+        const FUNCTIONS = [{'dragover': statusDragOver}, {
+            'dragstart': statusDragStart,
+            'dragover': cardDragOver
+        }, {'dragstart': cardDragStart}];
+        const functionsToAdd = FUNCTIONS[TYPES[type]];
+        for (let key in functionsToAdd) {
+            elem.addEventListener(key, functionsToAdd[key]);
+        }
+    }
 };
+
 
 function cardDragStart(event) {
     this.classList.add("card-dragging");
@@ -47,6 +59,7 @@ function cardDragEnd(event) {
     this.dataset.statusId = this.parentElement.dataset.statusId;
     fixOrder(this);
 }
+
 function statusDragStart(event) {
     this.classList.add("status-dragging");
     this.addEventListener("dragend", statusDragEnd);
@@ -112,7 +125,7 @@ function getDragPreviousCardSibling(container, y) {
             const box = child.getBoundingClientRect();
             const offset = y - box.top - box.height / 2;
             if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
+                return {offset: offset, element: child};
             } else {
                 return closest;
             }
@@ -134,7 +147,7 @@ function getDragPreviousStatusSibling(container, x) {
             const box = child.getBoundingClientRect();
             const offset = x - box.left - box.width / 2;
             if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
+                return {offset: offset, element: child};
             } else {
                 return closest;
             }
