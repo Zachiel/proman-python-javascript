@@ -78,14 +78,15 @@ const addStatusToDB = async (statusObject, newStatusTitle, boardId) => {
         title: newStatusTitle,
         boardId: boardId,
     });
-    console.log(statusResponse);
     for (let key in statusObject) {
         statusObject[key].dataset.statusId = statusResponse.id;
     }
     statusObject.renderedInput.toggleAttribute("disabled");
     statusObject.renderedInput.addEventListener("change", updateHandler);
+    statusObject.renderedStatus.querySelector('.button-delete').addEventListener('click',deleteHandler);
     dragManager.handleNewElement(statusObject.renderedStatus,"statusDrag" );
     dragManager.handleNewElement(statusObject.renderedCardContainer,"statusDrop" );
+
 
 };
 
@@ -105,7 +106,8 @@ const createTemporaryStatus = async (boardId, title, lastElem) => {
         renderedStatus: document.querySelector(
             `div[data-status-id=${temporaryStatusID}]`
         ),
-        renderedCardContainer: document.querySelector(`div[data-status-id=${temporaryStatusID}].card-droppable`)
+        renderedCardContainer: document.querySelector(`div[data-status-id=${temporaryStatusID}].card-droppable`),
+        renderdDeleteButton: document.querySelector(`button[data-status-id=${temporaryStatusID}].button-delete`)
     };
     statusObject.renderedInput.toggleAttribute("disabled");
     return statusObject;

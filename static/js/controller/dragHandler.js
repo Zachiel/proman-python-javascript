@@ -24,8 +24,6 @@ export let dragManager = {
         });
     },
     handleNewElement: function (elem, type) {
-        console.log('elem:');
-        console.log(elem);
         const TYPES = {board: 0, statusDrag: 1, statusDrop: 2, card: 3};
         const FUNCTIONS = [{'dragover': statusDragOver}, {
             'dragstart': statusDragStart},{
