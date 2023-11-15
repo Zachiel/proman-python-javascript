@@ -5,6 +5,10 @@ Welcome to ProMan, a dynamic project management tool inspired by the simplicity 
 ## Description
 ProMan aims to provide a user-friendly, one-page project management experience. The application allows users to effortlessly create, manage, and interact with boards and cards. ProMan is designed for simplicity, efficiency, and adaptability across various screen sizes.
 
+## Development Team
+[Piotr Warowny](https://github.com/Zachiel)
+[Mateusz Piszczatowski](https://github.com/MateuszPiszczatowski)
+
 ## Features
 - **Overview Page:** Quickly view existing boards and seamlessly add new boards with public access.
 - **Board Management:** Easily change the title of any board, enjoy the default columns, and add custom columns for card statuses.
